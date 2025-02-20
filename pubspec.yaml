@@ -1,0 +1,48 @@
+name: holidayinnexpressmovil
+description: "A new Flutter project."
+
+# Evita que el proyecto se publique en pub.dev
+publish_to: 'none'
+
+# Versión de la app
+version: 1.0.0+1
+
+# Versión de Flutter y Dart
+environment:
+  sdk: ^3.7.0
+
+# Dependencias necesarias para el proyecto
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Iconos de Cupertino (iOS)
+  cupertino_icons: ^1.0.8
+
+  # Plugin para generar códigos QR
+  qr_flutter: ^4.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # Reglas de lint para mejorar la calidad del código
+  flutter_lints: ^5.0.0
+
+  # Plugin para cambiar el ícono de la app
+  flutter_launcher_icons: ^0.13.1
+
+# Configuración específica de Flutter
+flutter:
+  # Habilita los iconos de Material Design
+  uses-material-design: true
+
+  # Archivos de imágenes y otros recursos
+  assets:
+    - assets/logo.png
+
+# Configuración para cambiar el ícono de la app
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon_logo.png"
