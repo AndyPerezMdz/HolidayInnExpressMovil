@@ -19,39 +19,24 @@ class HomeScreen extends StatelessWidget {
         elevation: 0,
         automaticallyImplyLeading: false, // Oculta el botón de retroceso
       ),
+
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Imagen de perfil y detalles del usuario
-            Column(
-              children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundImage: NetworkImage(
-                    'https://cdn.usegalileo.ai/sdxl10/139696f9-3302-4639-bcc5-b88e81a03388.png',
-                  ),
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  'Jenny Clarke, Customer Service',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const Text(
-                  'Joined in 2019',
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+            // ✅ Banner de la empresa (de extremo a extremo)
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10), // Opcional: bordes redondeados
+              child: Image.asset(
+                'assets/holidayinnexpressbanner.png',
+                width: double.infinity, // Ocupar todo el ancho
+                height: 150, // Altura ajustada para visibilidad
+                fit: BoxFit.cover, // Asegura que la imagen cubra toda el área
+              ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
 
             // Tarjetas de Check-in y Check-out
             _buildInfoCard(
@@ -100,7 +85,7 @@ class HomeScreen extends StatelessWidget {
         currentIndex: 0,
         selectedItemColor: Colors.blueGrey,
         unselectedItemColor: Colors.grey,
-        showSelectedLabels: true,  // ✅ Muestra los nombres de los ítems seleccionados
+        showSelectedLabels: true, // ✅ Muestra los nombres de los ítems seleccionados
         showUnselectedLabels: true,
         onTap: (index) {
           if (index == 1) {

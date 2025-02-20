@@ -40,6 +40,7 @@ flutter:
   # Archivos de imágenes y otros recursos
   assets:
     - assets/logo.png
+    - assets/holidayinnexpressbanner.png
 
 # Configuración para cambiar el ícono de la app
 flutter_icons:
