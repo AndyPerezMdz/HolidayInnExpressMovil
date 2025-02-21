@@ -1,6 +1,18 @@
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
+  static const Color primaryColor = Color.fromRGBO(35, 53, 103, 1);
+  static const double borderRadius = 16.0;
+  static const TextStyle titleStyle = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: Colors.black,
+  );
+  static const TextStyle subtitleStyle = TextStyle(
+    fontSize: 16,
+    color: Colors.grey,
+  );
+
   const HomeScreen({super.key});
 
   @override
@@ -9,7 +21,7 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: const Text(
-          'Bienvenido.',
+          'Bienvenido',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -28,7 +40,9 @@ class HomeScreen extends StatelessWidget {
           children: [
             // ✅ Banner de la empresa (de extremo a extremo)
             ClipRRect(
-              borderRadius: BorderRadius.circular(10), // Opcional: bordes redondeados
+              borderRadius: BorderRadius.circular(
+                10,
+              ), // Opcional: bordes redondeados
               child: Image.asset(
                 'assets/holidayinnexpressbanner.png',
                 width: double.infinity, // Ocupar todo el ancho
@@ -81,30 +95,6 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-        selectedItemColor: const Color.fromRGBO(35, 53, 103, 1),
-        unselectedItemColor: Colors.grey,
-        showSelectedLabels: true, // ✅ Muestra los nombres de los ítems seleccionados
-        showUnselectedLabels: true,
-        onTap: (index) {
-          if (index == 1) {
-            Navigator.pushNamed(context, '/qr');
-          }
-          if (index == 2) {
-            Navigator.pushNamed(context, '/reports');
-          }
-          if (index == 3) {
-            Navigator.pushNamed(context, '/settings');
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Casa'),
-          BottomNavigationBarItem(icon: Icon(Icons.qr_code), label: 'Codigo QR'),
-          BottomNavigationBarItem(icon: Icon(Icons.picture_as_pdf), label: 'Reportes'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Ajustes'),
-        ],
-      ),
     );
   }
 
@@ -113,23 +103,39 @@ class HomeScreen extends StatelessWidget {
     required String time,
     required String imageUrl,
   }) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 1,
-      color: Colors.white,
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey[300]!),
+        borderRadius: BorderRadius.circular(borderRadius),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ClipRRect(
             borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
+              topLeft: Radius.circular(borderRadius),
+              topRight: Radius.circular(borderRadius),
             ),
             child: Image.network(
               imageUrl,
               fit: BoxFit.cover,
               height: 150,
               width: double.infinity,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  height: 150,
+                  color: Colors.grey[300],
+                  child: const Icon(Icons.error),
+                );
+              },
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) return child;
+                return Container(
+                  height: 150,
+                  color: Colors.grey[200],
+                  child: const Center(child: CircularProgressIndicator()),
+                );
+              },
             ),
           ),
           Padding(
@@ -137,19 +143,9 @@ class HomeScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
+                Text(title, style: titleStyle),
                 const SizedBox(height: 5),
-                Text(
-                  time,
-                  style: const TextStyle(fontSize: 16, color: Colors.grey),
-                ),
+                Text(time, style: subtitleStyle),
               ],
             ),
           ),
@@ -162,27 +158,32 @@ class HomeScreen extends StatelessWidget {
     required String title,
     required String description,
   }) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 1,
-      color: Colors.white,
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey[300]!),
+        borderRadius: BorderRadius.circular(borderRadius),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Column(
+        child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+            // Contenido principal (título y descripción)
+            Expanded(
+              flex: 7, // Ocupa 70% del espacio
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: titleStyle),
+                  const SizedBox(height: 5),
+                  Text(description, style: subtitleStyle),
+                ],
               ),
             ),
-            const SizedBox(height: 5),
-            Text(
-              description,
-              style: const TextStyle(fontSize: 16, color: Colors.grey),
+            // Espacio para fecha y hora (30% del ancho)
+            const Expanded(
+              flex: 3, // Ocupa 30% del espacio
+              child: SizedBox(), // Por ahora está vacío
             ),
           ],
         ),

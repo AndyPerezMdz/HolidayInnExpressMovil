@@ -10,14 +10,38 @@ class QRScreen extends StatefulWidget {
 }
 
 class _QRScreenState extends State<QRScreen> {
-  String qrData = "https://example.com/employee/12345"; // Código QR inicial
+  // Constantes de diseño
+  static const Color primaryColor = Color.fromRGBO(35, 53, 103, 1);
+  static const double borderRadius = 20.0;
+  static const TextStyle titleStyle = TextStyle(
+    fontSize: 26,
+    fontWeight: FontWeight.bold,
+    color: Colors.black,
+  );
+  static const TextStyle subtitleStyle = TextStyle(
+    fontSize: 16,
+    color: Colors.black54,
+  );
+  static const TextStyle timerStyle = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: Colors.red,
+  );
+  static const TextStyle appBarTitleStyle = TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+    color: primaryColor,
+  );
+
+  // Variables de estado
+  String qrData = "https://example.com/employee/12345";
   late Timer _timer;
-  int _timeLeft = 300; // 5 minutos en segundos (5 * 60)
+  int _timeLeft = 300;
 
   @override
   void initState() {
     super.initState();
-    _startTimer(); // Inicia el temporizador
+    _startTimer();
   }
 
   @override
@@ -26,25 +50,30 @@ class _QRScreenState extends State<QRScreen> {
     super.dispose();
   }
 
-  // Función para iniciar el temporizador
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_timeLeft > 0) {
-        setState(() {
+      setState(() {
+        if (_timeLeft > 0) {
           _timeLeft--;
-        });
-      } else {
-        _regenerateQR(); // Cuando el tiempo llega a 0, regenera el QR
-      }
+        } else {
+          _regenerateQR();
+        }
+      });
     });
   }
 
-  // Función para regenerar el código QR
   void _regenerateQR() {
     setState(() {
-      qrData = "https://example.com/employee/${DateTime.now().millisecondsSinceEpoch}";
-      _timeLeft = 300; // Reinicia el tiempo a 5 minutos
+      qrData =
+          "https://example.com/employee/${DateTime.now().millisecondsSinceEpoch}";
+      _timeLeft = 300;
     });
+  }
+
+  String _formatTime(int timeInSeconds) {
+    final minutes = timeInSeconds ~/ 60;
+    final seconds = (timeInSeconds % 60).toString().padLeft(2, '0');
+    return "$minutes:$seconds";
   }
 
   @override
@@ -52,18 +81,11 @@ class _QRScreenState extends State<QRScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text(
-          'Check in/out',
-          style: TextStyle(
-            fontSize: 20, 
-            fontWeight: FontWeight.bold, 
-            color: Color.fromRGBO(35, 53, 103, 1)),
-        ),
+        title: const Text('Check in/out', style: appBarTitleStyle),
         elevation: 0,
-        automaticallyImplyLeading: false, // Oculta el botón de retroceso
+        automaticallyImplyLeading: false,
       ),
       backgroundColor: Colors.white,
-
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
@@ -73,43 +95,45 @@ class _QRScreenState extends State<QRScreen> {
             const Text(
               "Código QR",
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.black),
+              style: titleStyle,
             ),
             const SizedBox(height: 8),
             const Text(
               "Escanea este QR para hacer tu Check in/out",
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 16, color: Colors.black54),
+              style: subtitleStyle,
             ),
             const SizedBox(height: 20),
 
-            // Contador de tiempo restante
             Text(
-              "Time left: ${_timeLeft ~/ 60}:${(_timeLeft % 60).toString().padLeft(2, '0')}",
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.red),
+              "Tiempo restante: ${_formatTime(_timeLeft)}",
+              style: timerStyle,
             ),
             const SizedBox(height: 10),
 
-            // Botón para regenerar manualmente el código QR
             ElevatedButton(
               onPressed: _regenerateQR,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromRGBO(35, 53, 103, 1),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                backgroundColor: primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(borderRadius),
+                ),
               ),
-              child: const Text("Actualizar QR", style: TextStyle(color: Colors.white)),
+              child: const Text(
+                "Actualizar QR",
+                style: TextStyle(color: Colors.white),
+              ),
             ),
             const SizedBox(height: 20),
 
-            // Código QR
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(borderRadius),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black12.withValues(),
+                    color: Colors.black.withOpacity(0.1),
                     blurRadius: 8,
                     spreadRadius: 2,
                     offset: const Offset(0, 4),
@@ -125,32 +149,6 @@ class _QRScreenState extends State<QRScreen> {
             const SizedBox(height: 20),
           ],
         ),
-      ),
-
-      // 🔹 Barra de navegación inferior
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 1,
-        selectedItemColor: const Color.fromRGBO(35, 53, 103, 1),
-        unselectedItemColor: Colors.grey,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        onTap: (index) {
-          if (index == 0) {
-            Navigator.pushNamed(context, '/home');
-          }
-          if (index == 2) {
-            Navigator.pushNamed(context, '/reports');
-          }
-          if (index == 3) {
-            Navigator.pushNamed(context, '/settings');
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Casa'),
-          BottomNavigationBarItem(icon: Icon(Icons.qr_code), label: 'Codigo QR'),
-          BottomNavigationBarItem(icon: Icon(Icons.picture_as_pdf), label: 'Reportes'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Ajustes'),
-        ],
       ),
     );
   }
