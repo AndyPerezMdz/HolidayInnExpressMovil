@@ -10,8 +10,11 @@ class SettingsScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
         title: const Text(
-          "Settings",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+          "Configuración",
+          style: TextStyle(
+            fontSize: 20, 
+            fontWeight: FontWeight.bold, 
+            color: Color.fromRGBO(35, 53, 103, 1)),
         ),
         automaticallyImplyLeading: false,
       ),
@@ -23,7 +26,7 @@ class SettingsScreen extends StatelessWidget {
           width: 200, // Ajusta el ancho del botón
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blueGrey, // Color rojo para el botón de cerrar sesión
+              backgroundColor: const Color.fromRGBO(35, 53, 103, 1), // Color rojo para el botón de cerrar sesión
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8), // Bordes redondeados
@@ -34,7 +37,7 @@ class SettingsScreen extends StatelessWidget {
               Navigator.pushNamed(context, '/'); // Redirige a la pantalla de login
             },
             child: const Text(
-              "Log Out",
+              "Salir",
               style: TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
@@ -44,7 +47,7 @@ class SettingsScreen extends StatelessWidget {
       // 🔹 Barra de navegación inferior (igual que en las otras pantallas)
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 3, // ✅ Indica que estamos en Settings
-        selectedItemColor: Colors.blueGrey,
+        selectedItemColor: const Color.fromRGBO(35, 53, 103, 1),
         unselectedItemColor: Colors.grey,
         showSelectedLabels: true,  // ✅ Muestra los nombres de los ítems seleccionados
         showUnselectedLabels: true,
@@ -60,22 +63,10 @@ class SettingsScreen extends StatelessWidget {
           }
         },
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.qr_code),
-            label: 'QR Code',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.picture_as_pdf),
-            label: 'Reports',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Casa'),
+          BottomNavigationBarItem(icon: Icon(Icons.qr_code), label: 'Codigo QR'),
+          BottomNavigationBarItem(icon: Icon(Icons.picture_as_pdf), label: 'Reportes'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Ajustes'),
         ],
       ),
     );

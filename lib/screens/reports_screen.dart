@@ -19,8 +19,11 @@ class ReportsScreen extends StatelessWidget {
         elevation: 0,
         automaticallyImplyLeading: false, // Oculta el botón de retroceso        
         title: const Text(
-          "My Reports",
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+          "Mis reportes",
+          style: TextStyle(
+            fontSize: 20, 
+            fontWeight: FontWeight.bold, 
+            color: Color.fromRGBO(35, 53, 103, 1)),
         ),
         actions: [
           IconButton(
@@ -50,7 +53,7 @@ class ReportsScreen extends StatelessWidget {
       // 🔹 Agregamos el menú de navegación igual al de Home y QR
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 2,
-        selectedItemColor: Colors.blueGrey,
+        selectedItemColor: const Color.fromRGBO(35, 53, 103, 1),
         unselectedItemColor: Colors.grey,
         showSelectedLabels: true,
         showUnselectedLabels: true,
@@ -66,22 +69,10 @@ class ReportsScreen extends StatelessWidget {
           }
         },
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.qr_code),
-            label: 'QR Code',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.picture_as_pdf),
-            label: 'Reports',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Casa'),
+          BottomNavigationBarItem(icon: Icon(Icons.qr_code), label: 'Codigo QR'),
+          BottomNavigationBarItem(icon: Icon(Icons.picture_as_pdf), label: 'Reportes'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Ajustes'),
         ],
       ),
     );

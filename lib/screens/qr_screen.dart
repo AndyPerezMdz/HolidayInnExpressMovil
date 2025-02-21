@@ -53,8 +53,11 @@ class _QRScreenState extends State<QRScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: const Text(
-          'Quick Response.',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+          'Check in/out',
+          style: TextStyle(
+            fontSize: 20, 
+            fontWeight: FontWeight.bold, 
+            color: Color.fromRGBO(35, 53, 103, 1)),
         ),
         elevation: 0,
         automaticallyImplyLeading: false, // Oculta el botón de retroceso
@@ -68,13 +71,13 @@ class _QRScreenState extends State<QRScreen> {
           children: [
             const SizedBox(height: 20),
             const Text(
-              "QR Code",
+              "Código QR",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.black),
             ),
             const SizedBox(height: 8),
             const Text(
-              "Scan this code for check-in and check-out.",
+              "Escanea este QR para hacer tu Check in/out",
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 16, color: Colors.black54),
             ),
@@ -91,10 +94,10 @@ class _QRScreenState extends State<QRScreen> {
             ElevatedButton(
               onPressed: _regenerateQR,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blueGrey,
+                backgroundColor: const Color.fromRGBO(35, 53, 103, 1),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               ),
-              child: const Text("Refresh QR", style: TextStyle(color: Colors.white)),
+              child: const Text("Actualizar QR", style: TextStyle(color: Colors.white)),
             ),
             const SizedBox(height: 20),
 
@@ -127,7 +130,7 @@ class _QRScreenState extends State<QRScreen> {
       // 🔹 Barra de navegación inferior
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 1,
-        selectedItemColor: Colors.blueGrey,
+        selectedItemColor: const Color.fromRGBO(35, 53, 103, 1),
         unselectedItemColor: Colors.grey,
         showSelectedLabels: true,
         showUnselectedLabels: true,
@@ -143,10 +146,10 @@ class _QRScreenState extends State<QRScreen> {
           }
         },
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.qr_code), label: 'QR Code'),
-          BottomNavigationBarItem(icon: Icon(Icons.picture_as_pdf), label: 'Reports'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Casa'),
+          BottomNavigationBarItem(icon: Icon(Icons.qr_code), label: 'Codigo QR'),
+          BottomNavigationBarItem(icon: Icon(Icons.picture_as_pdf), label: 'Reportes'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Ajustes'),
         ],
       ),
     );

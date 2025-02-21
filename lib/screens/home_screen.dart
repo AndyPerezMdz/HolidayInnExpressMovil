@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Colors.black,
+            color: Color.fromRGBO(35, 53, 103, 1),
           ),
         ),
         elevation: 0,
@@ -40,14 +40,14 @@ class HomeScreen extends StatelessWidget {
 
             // Tarjetas de Check-in y Check-out
             _buildInfoCard(
-              title: "Last check-in",
+              title: "Última entrada",
               time: "09:00",
               imageUrl:
                   "https://t4.ftcdn.net/jpg/12/51/06/01/240_F_1251060186_3C9Pn66krfVNaxpcH1KkSmIo3SvSavWi.jpg",
             ),
             const SizedBox(height: 10),
             _buildInfoCard(
-              title: "Last check-out",
+              title: "Última salida",
               time: "18:00",
               imageUrl:
                   "https://t4.ftcdn.net/jpg/10/75/67/77/240_F_1075677703_FpDiLRjkEkoJZ8txclUHb2zU2U7kc9KK.jpg",
@@ -58,7 +58,7 @@ class HomeScreen extends StatelessWidget {
             const Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                'Announcements',
+                'Anuncios',
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -68,22 +68,22 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             _buildAnnouncementCard(
-              title: "New policy for lunch break",
+              title: "Nueva política para el desayuno",
               description:
-                  "Starting from next Monday, we have a new policy for lunch break. Check the details in your email.",
+                  "A partir del lunes, tenemos una nueva política sobre el desayuno. Detalles en el correo.",
             ),
             const SizedBox(height: 10),
             _buildAnnouncementCard(
-              title: "Work from home on Friday",
+              title: "Trabajo desde casa el viernes",
               description:
-                  "Due to the construction work in the building, we can work from home on Friday.",
+                  "Debido a la construcción que se está haciendo en el hotel, no se podrá trabajar presencialmente.",
             ),
           ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 0,
-        selectedItemColor: Colors.blueGrey,
+        selectedItemColor: const Color.fromRGBO(35, 53, 103, 1),
         unselectedItemColor: Colors.grey,
         showSelectedLabels: true, // ✅ Muestra los nombres de los ítems seleccionados
         showUnselectedLabels: true,
@@ -99,10 +99,10 @@ class HomeScreen extends StatelessWidget {
           }
         },
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.qr_code), label: 'QR Code'),
-          BottomNavigationBarItem(icon: Icon(Icons.picture_as_pdf), label: 'Reports'),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Settings'),
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Casa'),
+          BottomNavigationBarItem(icon: Icon(Icons.qr_code), label: 'Codigo QR'),
+          BottomNavigationBarItem(icon: Icon(Icons.picture_as_pdf), label: 'Reportes'),
+          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Ajustes'),
         ],
       ),
     );
