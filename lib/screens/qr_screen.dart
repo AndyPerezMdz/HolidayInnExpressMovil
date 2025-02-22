@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:provider/provider.dart';
+import '../providers/theme_provider.dart';
 
 class QRScreen extends StatefulWidget {
   const QRScreen({super.key});
@@ -78,76 +80,95 @@ class _QRScreenState extends State<QRScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text('Check in/out', style: appBarTitleStyle),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        title: Text(
+          themeProvider.getText('qr_code'),
+          style: appBarTitleStyle.copyWith(
+            color: Theme.of(context).textTheme.titleLarge?.color,
+          ),
+        ),
         elevation: 0,
         automaticallyImplyLeading: false,
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 20),
-            const Text(
-              "Código QR",
-              textAlign: TextAlign.center,
-              style: titleStyle,
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              "Escanea este QR para hacer tu Check in/out",
-              textAlign: TextAlign.center,
-              style: subtitleStyle,
-            ),
-            const SizedBox(height: 20),
-
-            Text(
-              "Tiempo restante: ${_formatTime(_timeLeft)}",
-              style: timerStyle,
-            ),
-            const SizedBox(height: 10),
-
-            ElevatedButton(
-              onPressed: _regenerateQR,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: primaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(borderRadius),
-                ),
-              ),
-              child: const Text(
-                "Actualizar QR",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-            const SizedBox(height: 20),
-
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(borderRadius),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 8,
-                    spreadRadius: 2,
-                    offset: const Offset(0, 4),
+        child: SizedBox(
+          width: double.infinity,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 20),
+                Text(
+                  themeProvider.getText('scan_qr'),
+                  textAlign: TextAlign.center,
+                  style: titleStyle.copyWith(
+                    color: Theme.of(context).textTheme.titleLarge?.color,
                   ),
-                ],
-              ),
-              child: QrImageView(
-                data: qrData,
-                size: 200,
-                version: QrVersions.auto,
-              ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  themeProvider.getText('scan_qr_desc'),
+                  textAlign: TextAlign.center,
+                  style: subtitleStyle.copyWith(
+                    color: Theme.of(context).textTheme.bodyMedium?.color,
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                Text(
+                  "${themeProvider.getText('time_remaining')} ${_formatTime(_timeLeft)}",
+                  style: timerStyle,
+                ),
+                const SizedBox(height: 10),
+
+                SizedBox(
+                  width: 200,
+                  child: ElevatedButton(
+                    onPressed: _regenerateQR,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: primaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(borderRadius),
+                      ),
+                    ),
+                    child: Text(
+                      themeProvider.getText('update_qr'),
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+
+                Container(
+                  constraints: const BoxConstraints(maxWidth: 300),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(borderRadius),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 8,
+                        spreadRadius: 2,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: QrImageView(data: qrData, version: QrVersions.auto),
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
             ),
-            const SizedBox(height: 20),
-          ],
+          ),
         ),
       ),
     );

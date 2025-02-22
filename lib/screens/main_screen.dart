@@ -3,6 +3,8 @@ import 'home_screen.dart';
 import 'qr_screen.dart';
 import 'reports_screen.dart';
 import 'settings_screen.dart';
+import 'package:provider/provider.dart';
+import '../providers/theme_provider.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -31,6 +33,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       body: _screens[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -44,17 +47,23 @@ class _MainScreenState extends State<MainScreen> {
         selectedFontSize: 12,
         unselectedFontSize: 12,
         onTap: _onItemTapped,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Casa'),
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.qr_code),
-            label: 'Codigo QR',
+            icon: const Icon(Icons.home),
+            label: themeProvider.getText('home'),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.picture_as_pdf),
-            label: 'Reportes',
+            icon: const Icon(Icons.qr_code),
+            label: themeProvider.getText('qr_menu'),
           ),
-          BottomNavigationBarItem(icon: Icon(Icons.settings), label: 'Ajustes'),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.insert_drive_file),
+            label: themeProvider.getText('reports_menu'),
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.settings),
+            label: themeProvider.getText('settings_menu'),
+          ),
         ],
       ),
     );

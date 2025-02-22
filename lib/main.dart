@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'screens/login_screen.dart';
-import 'screens/main_screen.dart';
 import 'screens/forgot_password_screen.dart';
+import 'providers/theme_provider.dart';
+import 'providers/auth_provider.dart';
+import 'widgets/auth_wrapper.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -14,29 +25,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Holiday Inn Express',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(
-            0xFF006640,
-          ), // Color corporativo de Holiday Inn
-          brightness: Brightness.light,
-        ),
-        useMaterial3: true,
-        // Personalización adicional del tema
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF006640),
-          foregroundColor: Colors.white,
-        ),
-      ),
-      navigatorKey: navigatorKey,
-      initialRoute: '/', // Ruta inicial
-      routes: {
-        '/': (context) => LoginScreen(),
-        '/main': (context) => const MainScreen(),
-        '/forgot-password': (context) => const ForgotPasswordScreen(),
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'Holiday Inn Express',
+          theme: themeProvider.currentTheme,
+          navigatorKey: navigatorKey,
+          initialRoute: '/', // Ruta inicial
+          routes: {
+            '/': (context) => const LoginScreen(),
+            '/main': (context) => const AuthWrapper(),
+            '/forgot-password': (context) => const ForgotPasswordScreen(),
+          },
+        );
       },
     );
   }

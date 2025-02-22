@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -136,9 +138,9 @@ class _LoginScreenState extends State<LoginScreen> {
       );
       return;
     }
-    // Añadir este print para debug
-    print('Navegando a MainScreen');
-    // Aquí iría la lógica de autenticación
+
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    authProvider.login();
     Navigator.pushReplacementNamed(context, '/main');
   }
 

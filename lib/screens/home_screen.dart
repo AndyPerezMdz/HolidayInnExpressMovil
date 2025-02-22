@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/theme_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   static const Color primaryColor = Color.fromRGBO(35, 53, 103, 1);
@@ -17,80 +19,119 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        title: const Text(
-          'Bienvenido',
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        title: Text(
+          themeProvider.getText('welcome'),
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Color.fromRGBO(35, 53, 103, 1),
+            color: Theme.of(context).textTheme.titleLarge?.color,
           ),
         ),
         elevation: 0,
-        automaticallyImplyLeading: false, // Oculta el botón de retroceso
+        automaticallyImplyLeading: false,
       ),
-
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ✅ Banner de la empresa (de extremo a extremo)
+            // Banner
             ClipRRect(
-              borderRadius: BorderRadius.circular(
-                10,
-              ), // Opcional: bordes redondeados
+              borderRadius: BorderRadius.circular(10),
               child: Image.asset(
                 'assets/holidayinnexpressbanner.png',
-                width: double.infinity, // Ocupar todo el ancho
-                height: 150, // Altura ajustada para visibilidad
-                fit: BoxFit.cover, // Asegura que la imagen cubra toda el área
+                width: double.infinity,
+                height: 150,
+                fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
 
-            // Tarjetas de Check-in y Check-out
+            // Check-in/out cards
             _buildInfoCard(
-              title: "Última entrada",
+              context,
+              title: themeProvider.getText('last_entry'),
               time: "09:00",
+              date: "2024-03-20",
               imageUrl:
                   "https://t4.ftcdn.net/jpg/12/51/06/01/240_F_1251060186_3C9Pn66krfVNaxpcH1KkSmIo3SvSavWi.jpg",
             ),
             const SizedBox(height: 10),
             _buildInfoCard(
-              title: "Última salida",
+              context,
+              title: themeProvider.getText('last_exit'),
               time: "18:00",
+              date: "2024-03-20",
               imageUrl:
                   "https://t4.ftcdn.net/jpg/10/75/67/77/240_F_1075677703_FpDiLRjkEkoJZ8txclUHb2zU2U7kc9KK.jpg",
             ),
             const SizedBox(height: 20),
 
-            // Sección de anuncios
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Anuncios',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
+            // Announcements section
+            Text(
+              themeProvider.getText('announcements'),
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).textTheme.titleLarge?.color,
               ),
             ),
             const SizedBox(height: 10),
-            _buildAnnouncementCard(
-              title: "Nueva política para el desayuno",
-              description:
-                  "A partir del lunes, tenemos una nueva política sobre el desayuno. Detalles en el correo.",
-            ),
-            const SizedBox(height: 10),
-            _buildAnnouncementCard(
-              title: "Trabajo desde casa el viernes",
-              description:
-                  "Debido a la construcción que se está haciendo en el hotel, no se podrá trabajar presencialmente.",
+            SizedBox(
+              height: 300, // Altura fija para el scroll de anuncios
+              child: ListView(
+                children: [
+                  _buildAnnouncementCard(
+                    context,
+                    title: "Nueva política para el desayuno",
+                    description:
+                        "A partir del lunes, tenemos una nueva política sobre el desayuno. Detalles en el correo.",
+                    date: "2024-03-20",
+                    time: "09:00",
+                  ),
+                  const SizedBox(height: 10),
+                  _buildAnnouncementCard(
+                    context,
+                    title: "Trabajo desde casa el viernes",
+                    description:
+                        "Debido a la construcción que se está haciendo en el hotel, no se podrá trabajar presencialmente.",
+                    date: "2024-03-19",
+                    time: "15:30",
+                  ),
+                  const SizedBox(height: 10),
+                  _buildAnnouncementCard(
+                    context,
+                    title: "Mantenimiento programado",
+                    description:
+                        "El sistema estará en mantenimiento este domingo de 2 AM a 4 AM.",
+                    date: "2024-03-18",
+                    time: "11:00",
+                  ),
+                  const SizedBox(height: 10),
+                  _buildAnnouncementCard(
+                    context,
+                    title: "Nuevos protocolos de seguridad",
+                    description:
+                        "Se han actualizado los protocolos de seguridad. Por favor revisa tu correo para más detalles.",
+                    date: "2024-03-17",
+                    time: "16:45",
+                  ),
+                  const SizedBox(height: 10),
+                  _buildAnnouncementCard(
+                    context,
+                    title: "Actualización de uniformes",
+                    description:
+                        "La próxima semana se entregarán los nuevos uniformes. Pasa por RH para recoger el tuyo.",
+                    date: "2024-03-16",
+                    time: "10:15",
+                  ),
+                ],
+              ),
             ),
           ],
         ),
@@ -98,15 +139,18 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoCard({
+  Widget _buildInfoCard(
+    BuildContext context, {
     required String title,
     required String time,
+    required String date,
     required String imageUrl,
   }) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey[300]!),
+        border: Border.all(color: Theme.of(context).dividerColor),
         borderRadius: BorderRadius.circular(borderRadius),
+        color: Theme.of(context).cardColor,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -121,13 +165,12 @@ class HomeScreen extends StatelessWidget {
               fit: BoxFit.cover,
               height: 150,
               width: double.infinity,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  height: 150,
-                  color: Colors.grey[300],
-                  child: const Icon(Icons.error),
-                );
-              },
+              errorBuilder:
+                  (context, error, stackTrace) => Container(
+                    height: 150,
+                    color: Colors.grey[300],
+                    child: const Icon(Icons.error),
+                  ),
               loadingBuilder: (context, child, loadingProgress) {
                 if (loadingProgress == null) return child;
                 return Container(
@@ -143,9 +186,19 @@ class HomeScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: titleStyle),
+                Text(
+                  title,
+                  style: titleStyle.copyWith(
+                    color: Theme.of(context).textTheme.titleLarge?.color,
+                  ),
+                ),
                 const SizedBox(height: 5),
-                Text(time, style: subtitleStyle),
+                Text(
+                  "$date - $time",
+                  style: subtitleStyle.copyWith(
+                    color: Theme.of(context).textTheme.bodyMedium?.color,
+                  ),
+                ),
               ],
             ),
           ),
@@ -154,36 +207,47 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAnnouncementCard({
+  Widget _buildAnnouncementCard(
+    BuildContext context, {
     required String title,
     required String description,
+    required String date,
+    required String time,
   }) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey[300]!),
+        border: Border.all(color: Theme.of(context).dividerColor),
         borderRadius: BorderRadius.circular(borderRadius),
+        color: Theme.of(context).cardColor,
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Row(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Contenido principal (título y descripción)
-            Expanded(
-              flex: 7, // Ocupa 70% del espacio
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title, style: titleStyle),
-                  const SizedBox(height: 5),
-                  Text(description, style: subtitleStyle),
-                ],
+            Text(
+              title,
+              style: titleStyle.copyWith(
+                color: Theme.of(context).textTheme.titleLarge?.color,
               ),
             ),
-            // Espacio para fecha y hora (30% del ancho)
-            const Expanded(
-              flex: 3, // Ocupa 30% del espacio
-              child: SizedBox(), // Por ahora está vacío
+            const SizedBox(height: 5),
+            Text(
+              description,
+              style: subtitleStyle.copyWith(
+                color: Theme.of(context).textTheme.bodyMedium?.color,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              "$date - $time",
+              style: TextStyle(
+                fontSize: 14,
+                color: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.color?.withOpacity(0.7),
+                fontStyle: FontStyle.italic,
+              ),
             ),
           ],
         ),
