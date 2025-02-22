@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'screens/login_screen.dart';
 import 'screens/main_screen.dart';
+import 'screens/forgot_password_screen.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -35,11 +36,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => LoginScreen(),
         '/main': (context) => const MainScreen(),
-        // Eliminar las rutas individuales ya que ahora se manejan dentro de MainScreen
-        // '/home': (context) => const HomeScreen(),
-        // '/qr': (context) => const QRScreen(),
-        // '/reports': (context) => const ReportsScreen(),
-        // '/settings': (context) => const SettingsScreen(),
+        '/forgot-password': (context) => const ForgotPasswordScreen(),
       },
     );
   }

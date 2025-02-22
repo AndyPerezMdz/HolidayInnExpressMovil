@@ -110,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   // Olvidé la contraseña
                   TextButton(
                     onPressed: () {
-                      // Acción para recuperar contraseña
+                      Navigator.pushNamed(context, '/forgot-password');
                     },
                     child: const Text(
                       "Olvidé la contraseña",
@@ -149,34 +149,31 @@ class _LoginScreenState extends State<LoginScreen> {
     required bool isPassword,
     Widget? suffixIcon,
   }) {
-    return SizedBox(
-      height: 40,
-      child: TextField(
-        controller: controller,
-        obscureText: isPassword && _obscurePassword,
-        style: const TextStyle(fontSize: 18, color: Colors.black),
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.white,
-          hintText: hintText,
-          hintStyle: const TextStyle(
-            fontSize: 16,
-            color: Color.fromARGB(179, 31, 31, 31),
-          ),
-          prefixIcon: Icon(
-            icon,
-            size: 24,
-            color: const Color.fromARGB(129, 0, 0, 0),
-          ),
-          suffixIcon: suffixIcon,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20),
-            borderSide: BorderSide.none,
-          ),
-          contentPadding: const EdgeInsets.symmetric(
-            vertical: 15,
-            horizontal: 20,
-          ),
+    return TextField(
+      controller: controller,
+      obscureText: isPassword && _obscurePassword,
+      style: const TextStyle(fontSize: 16, color: Colors.black),
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: Colors.white,
+        hintText: hintText,
+        hintStyle: const TextStyle(
+          fontSize: 16,
+          color: Color.fromARGB(179, 31, 31, 31),
+        ),
+        prefixIcon: Icon(
+          icon,
+          size: 24,
+          color: const Color.fromARGB(129, 0, 0, 0),
+        ),
+        suffixIcon: suffixIcon,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+          borderSide: BorderSide.none,
+        ),
+        contentPadding: const EdgeInsets.symmetric(
+          vertical: 12,
+          horizontal: 20,
         ),
       ),
     );
