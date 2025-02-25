@@ -44,7 +44,7 @@ class HomeScreen extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Image.asset(
-                'assets/holidayinnexpressbanner.png',
+                'assets/holidayinnexpressbanner-sinfondo.png',
                 width: double.infinity,
                 height: 150,
                 fit: BoxFit.cover,

@@ -102,6 +102,8 @@ class ThemeProvider extends ChangeNotifier {
       'feature_notifications': 'Notificaciones',
       'feature_notifications_desc':
           'Sistema de recordatorios para check-in/out.',
+      'consecutive_days': 'días consecutivos',
+      'tap_qr_instruction': 'Toca el código QR para simular un check-in',
     },
     'English': {
       'welcome': 'Welcome',
@@ -200,6 +202,8 @@ class ThemeProvider extends ChangeNotifier {
       'feature_language_desc': 'Support for Spanish and English.',
       'feature_notifications': 'Notifications',
       'feature_notifications_desc': 'Check-in/out reminder system.',
+      'consecutive_days': 'consecutive days',
+      'tap_qr_instruction': 'Tap the QR code to simulate check-in',
     },
   };
 

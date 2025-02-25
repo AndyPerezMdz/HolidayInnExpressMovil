@@ -31,7 +31,7 @@ dev_dependencies:
     sdk: flutter
 
   # Reglas de lint para mejorar la calidad del código
-  flutter_lints: ^5.0.0
+  flutter_lints: ^2.0.0
 
   # Plugin para cambiar el ícono de la app
   flutter_launcher_icons: ^0.13.1
@@ -45,6 +45,7 @@ flutter:
   assets:
     - assets/logo.png
     - assets/holidayinnexpressbanner.png
+    - assets/holidayinnexpressbanner-sinfondo.png
 
 # Configuración para cambiar el ícono de la app
 flutter_icons:

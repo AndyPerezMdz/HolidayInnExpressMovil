@@ -5,6 +5,9 @@ import '../screens/profile_screen.dart';
 import '../screens/help_screen.dart';
 import '../screens/about_screen.dart';
 import '../providers/auth_provider.dart';
+import '../utils/page_transition.dart';
+import '../screens/forgot_password_screen.dart';
+import '../screens/login_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -86,9 +89,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => const ProfileScreen(),
-                  ),
+                  SlideLeftTransition(page: const ProfileScreen()),
                 );
               },
             ),
@@ -142,7 +143,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: "Cambiar contraseña",
               subtitle: "Actualiza tu contraseña de acceso",
               onTap: () {
-                Navigator.pushNamed(context, '/forgot-password');
+                Navigator.push(
+                  context,
+                  SlideLeftTransition(page: const ForgotPasswordScreen()),
+                );
               },
             ),
 
@@ -158,7 +162,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const HelpScreen()),
+                  SlideLeftTransition(page: const HelpScreen()),
                 );
               },
             ),
@@ -170,7 +174,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const AboutScreen()),
+                  SlideLeftTransition(page: const AboutScreen()),
                 );
               },
             ),
@@ -270,35 +274,59 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _showLogoutConfirmation(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+
     showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
-        final themeProvider = Provider.of<ThemeProvider>(
-          context,
-          listen: false,
-        );
         return AlertDialog(
-          title: Text(themeProvider.getText('logout_confirm')),
-          content: Text(themeProvider.getText('logout_confirm_desc')),
+          backgroundColor: Theme.of(context).cardColor,
+          title: Text(
+            themeProvider.getText('logout'),
+            style: TextStyle(
+              color: Theme.of(context).textTheme.titleLarge?.color,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Text(
+            themeProvider.getText('logout_confirm'),
+            style: TextStyle(
+              color: Theme.of(context).textTheme.bodyLarge?.color,
+            ),
+          ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.pop(dialogContext),
               child: Text(
                 themeProvider.getText('cancel'),
-                style: TextStyle(color: Colors.grey),
+                style: TextStyle(
+                  color: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.color?.withOpacity(0.7),
+                ),
               ),
             ),
-            TextButton(
+            ElevatedButton(
               onPressed: () {
-                Navigator.pop(context);
+                Navigator.pop(dialogContext);
                 _handleLogout();
               },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(borderRadius),
+                ),
+              ),
               child: Text(
                 themeProvider.getText('logout'),
-                style: TextStyle(color: primaryColor),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
@@ -312,24 +340,45 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     showDialog(
       context: context,
-      builder: (BuildContext context) {
+      builder: (BuildContext dialogContext) {
         return AlertDialog(
-          title: Text(themeProvider.getText('select_language')),
+          backgroundColor: Theme.of(context).cardColor,
+          title: Text(
+            themeProvider.getText('select_language'),
+            style: TextStyle(
+              color: Theme.of(context).textTheme.titleLarge?.color,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(borderRadius),
+          ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               ListTile(
-                title: const Text('Español'),
+                title: Text(
+                  'Español',
+                  style: TextStyle(
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                  ),
+                ),
                 onTap: () {
                   themeProvider.setLanguage('Español');
-                  Navigator.pop(context);
+                  Navigator.pop(dialogContext);
                 },
               ),
               ListTile(
-                title: const Text('English'),
+                title: Text(
+                  'English',
+                  style: TextStyle(
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                  ),
+                ),
                 onTap: () {
                   themeProvider.setLanguage('English');
-                  Navigator.pop(context);
+                  Navigator.pop(dialogContext);
                 },
               ),
             ],
@@ -342,6 +391,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void _handleLogout() {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     authProvider.logout();
-    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+    Navigator.pushAndRemoveUntil(
+      context,
+      SlideLeftTransition(page: const LoginScreen()),
+      (route) => false,
+    );
   }
 }

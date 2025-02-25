@@ -5,6 +5,7 @@ import 'screens/forgot_password_screen.dart';
 import 'providers/theme_provider.dart';
 import 'providers/auth_provider.dart';
 import 'widgets/auth_wrapper.dart';
+import 'utils/page_transition.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -32,11 +33,18 @@ class MyApp extends StatelessWidget {
           title: 'Holiday Inn Express',
           theme: themeProvider.currentTheme,
           navigatorKey: navigatorKey,
-          initialRoute: '/', // Ruta inicial
-          routes: {
-            '/': (context) => const LoginScreen(),
-            '/main': (context) => const AuthWrapper(),
-            '/forgot-password': (context) => const ForgotPasswordScreen(),
+          initialRoute: '/',
+          onGenerateRoute: (settings) {
+            switch (settings.name) {
+              case '/':
+                return SlideLeftTransition(page: const LoginScreen());
+              case '/main':
+                return SlideLeftTransition(page: const AuthWrapper());
+              case '/forgot-password':
+                return SlideLeftTransition(page: const ForgotPasswordScreen());
+              default:
+                return null;
+            }
           },
         );
       },
