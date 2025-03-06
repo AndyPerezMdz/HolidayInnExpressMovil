@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
+import '../widgets/illuminated_icon.dart';
 
 class AboutScreen extends StatelessWidget {
   const AboutScreen({super.key});
@@ -39,9 +40,10 @@ class AboutScreen extends StatelessWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Theme.of(context).textTheme.bodyLarge?.color,
+          icon: IlluminatedIcon(
+            icon: Icons.arrow_back,
+            size: 24,
+            lightModeColor: Theme.of(context).textTheme.bodyLarge?.color,
           ),
           onPressed: () => Navigator.pop(context),
         ),
@@ -105,7 +107,11 @@ class AboutScreen extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       color: Theme.of(context).cardColor,
       child: ListTile(
-        leading: Icon(Icons.check_circle, color: primaryColor),
+        leading: IlluminatedIcon(
+          icon: Icons.check_circle,
+          size: 24,
+          lightModeColor: Theme.of(context).primaryColor,
+        ),
         title: Text(
           feature['title']!,
           style: TextStyle(

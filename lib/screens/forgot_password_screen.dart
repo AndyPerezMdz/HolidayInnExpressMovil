@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -18,6 +20,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   Future<void> _handlePasswordReset() async {
+    // Validación de campo vacío
     if (_emailController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -28,30 +31,52 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       return;
     }
 
+    // Validación de formato de correo
+    final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+    if (!emailRegExp.hasMatch(_emailController.text)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Por favor, ingrese un correo electrónico válido'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     setState(() {
       _isLoading = true;
     });
 
-    // Simular el proceso de envío
-    await Future.delayed(const Duration(seconds: 2));
+    // Enviar la solicitud al endpoint
+    final response = await http.post(
+      Uri.parse('https://devmace.onrender.com/auth/request-password-reset'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({'email': _emailController.text}),
+    );
 
-    if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
+    setState(() {
+      _isLoading = false;
+    });
 
-      // Mostrar mensaje de éxito
+    if (response.statusCode == 200) {
+      // Manejar la respuesta exitosa
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text(
-            'Se ha enviado un enlace de recuperación a su correo electrónico',
+            'Se ha enviado un enlace de recuperación a su correo electrónico.',
           ),
           backgroundColor: Colors.green,
         ),
       );
-
-      // Regresar a la pantalla de login
-      Navigator.pop(context);
+      Navigator.pop(context); // Regresar a la pantalla anterior
+    } else {
+      // Manejar el error
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error: ${json.decode(response.body)['message']}'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 

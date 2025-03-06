@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
+import '../widgets/illuminated_icon.dart';
 
 class HelpScreen extends StatelessWidget {
   const HelpScreen({super.key});
@@ -35,9 +36,10 @@ class HelpScreen extends StatelessWidget {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Theme.of(context).textTheme.bodyLarge?.color,
+          icon: IlluminatedIcon(
+            icon: Icons.arrow_back,
+            size: 24,
+            lightModeColor: Theme.of(context).textTheme.bodyLarge?.color,
           ),
           onPressed: () => Navigator.pop(context),
         ),
@@ -148,7 +150,11 @@ class HelpScreen extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       color: Theme.of(context).cardColor,
       child: ListTile(
-        leading: Icon(icon, color: primaryColor),
+        leading: IlluminatedIcon(
+          icon: icon,
+          size: 24,
+          lightModeColor: Theme.of(context).primaryColor,
+        ),
         title: Text(
           title,
           style: TextStyle(

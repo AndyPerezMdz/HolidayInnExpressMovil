@@ -1,40 +1,45 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
-import '../widgets/animated_press.dart';
+import '../providers/auth_provider.dart';
 import '../widgets/celebration_overlay.dart';
+import '../widgets/pulse_animation.dart';
+import '../services/api_service.dart';
+import '../widgets/illuminated_icon.dart';
 
 class QRScreen extends StatefulWidget {
   const QRScreen({super.key});
 
   @override
-  _QRScreenState createState() => _QRScreenState();
+  State<QRScreen> createState() => _QRScreenState();
 }
 
 class _QRScreenState extends State<QRScreen>
     with SingleTickerProviderStateMixin {
-  // Constantes de diseño
   static const Color primaryColor = Color.fromRGBO(35, 53, 103, 1);
   static const double borderRadius = 20.0;
 
-  // Variables de estado
-  String qrData = "https://example.com/employee/12345";
+  final ApiService _apiService = ApiService();
+  Uint8List? qrImage;
   late Timer _timer;
-  int _timeLeft = 300;
-  int _checkInStreak = 0;
-  bool _showCelebration = false;
+  int _timeLeft = 15;
+  final int _checkInStreak = 0;
+  final bool _showCelebration = false;
+  bool _isLoading = false;
   late AnimationController _rotationController;
 
   @override
   void initState() {
     super.initState();
+    _disableScreenshot();
     _startTimer();
     _rotationController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
     );
+    _generateQRData();
   }
 
   @override
@@ -48,7 +53,7 @@ class _QRScreenState extends State<QRScreen>
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
         if (_timeLeft > 0) {
-          _timeLeft--;
+          _timeLeft -= 1;
         } else {
           _regenerateQR();
         }
@@ -56,29 +61,53 @@ class _QRScreenState extends State<QRScreen>
     });
   }
 
-  void _regenerateQR() {
+  Future<void> _generateQRData() async {
     setState(() {
-      qrData =
-          "https://example.com/employee/${DateTime.now().millisecondsSinceEpoch}";
-      _timeLeft = 300;
-      _rotationController.forward(from: 0.0);
-    });
-  }
-
-  void _simulateCheckIn() {
-    setState(() {
-      _checkInStreak++;
-      _showCelebration = true;
+      _isLoading = true;
     });
 
-    // Ocultar la celebración después de 2 segundos
-    Future.delayed(const Duration(seconds: 2), () {
+    try {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final token = authProvider.token;
+
+      if (token == null) {
+        throw Exception('Token no disponible. Inicia sesión nuevamente.');
+      }
+
+      Uint8List qrBytes = await _apiService.getEmployeeQR(token);
+      setState(() {
+        qrImage = qrBytes;
+        _isLoading = false;
+      });
+    } catch (e) {
       if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al generar QR: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
         setState(() {
-          _showCelebration = false;
+          _isLoading = false;
         });
       }
+    }
+  }
+
+  Future<void> _regenerateQR() async {
+    await _generateQRData();
+    setState(() {
+      _timeLeft = 15;
     });
+    _rotationController.forward(from: 0.0);
+    HapticFeedback.mediumImpact();
+  }
+
+  Future<void> _disableScreenshot() async {
+    await SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: [],
+    );
   }
 
   String _formatTime(int timeInSeconds) {
@@ -90,184 +119,180 @@ class _QRScreenState extends State<QRScreen>
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
-    return CelebrationOverlay(
-      showCelebration: _showCelebration,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          title: Text(
-            themeProvider.getText('qr_code'),
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).textTheme.titleLarge?.color,
+    return Stack(
+      children: [
+        CelebrationOverlay(
+          showCelebration: _showCelebration,
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              title: Text(
+                themeProvider.getText('qr_code'),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).textTheme.titleLarge?.color,
+                ),
+              ),
+              elevation: 0,
+              automaticallyImplyLeading: false,
             ),
-          ),
-          elevation: 0,
-          automaticallyImplyLeading: false,
-        ),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: Center(
-          child: SingleChildScrollView(
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 600),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 20),
-                  Text(
-                    themeProvider.getText('scan_qr'),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).textTheme.titleLarge?.color,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    themeProvider.getText('scan_qr_desc'),
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Theme.of(context).textTheme.bodyMedium?.color,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Racha de check-ins
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: primaryColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(borderRadius),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.local_fire_department,
-                          color: Colors.orange,
-                          size: 28,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            body: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      Text(
+                        themeProvider.getText('scan_qr_desc'),
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Theme.of(context).textTheme.titleLarge?.color,
                         ),
-                        const SizedBox(width: 8),
-                        Builder(
-                          builder: (context) {
-                            final String translatedText = themeProvider.getText(
-                              'consecutive_days',
-                            );
-                            return Text(
-                              "$_checkInStreak $translatedText",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color:
-                                    Theme.of(
-                                      context,
-                                    ).textTheme.titleLarge?.color,
-                              ),
-                            );
-                          },
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 20),
+                      const Divider(color: Colors.grey),
+                      const SizedBox(height: 10),
+                      Text(
+                        themeProvider.getText('help_desc'),
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Theme.of(context).textTheme.bodyMedium?.color,
                         ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  Text(
-                    "${themeProvider.getText('time_remaining')} ${_formatTime(_timeLeft)}",
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-
-                  AnimatedPress(
-                    onTap: _regenerateQR,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 10,
+                        textAlign: TextAlign.center,
                       ),
-                      decoration: BoxDecoration(
-                        color: primaryColor,
-                        borderRadius: BorderRadius.circular(borderRadius),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          RotationTransition(
-                            turns: Tween(
-                              begin: 0.0,
-                              end: 1.0,
-                            ).animate(_rotationController),
-                            child: const Icon(
-                              Icons.refresh,
-                              color: Colors.white,
+                      const SizedBox(height: 20),
+                      PulseAnimation(
+                        child: GestureDetector(
+                          onTap: _isLoading ? null : _regenerateQR,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 12,
+                            ),
+                            decoration: BoxDecoration(
+                              color: primaryColor,
+                              borderRadius: BorderRadius.circular(borderRadius),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                RotationTransition(
+                                  turns: Tween<double>(
+                                    begin: 0,
+                                    end: 1,
+                                  ).animate(
+                                    CurvedAnimation(
+                                      parent: _rotationController,
+                                      curve: Curves.linear,
+                                    ),
+                                  ),
+                                  child: const Icon(
+                                    Icons.refresh,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  themeProvider.getText('update_qr'),
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                              ],
                             ),
                           ),
-                          const SizedBox(width: 8),
-                          Text(
-                            themeProvider.getText('update_qr'),
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // QR Code con animación de presión
-                  AnimatedPress(
-                    onTap: _simulateCheckIn,
-                    child: Container(
-                      constraints: const BoxConstraints(maxWidth: 300),
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(borderRadius),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 8,
-                            spreadRadius: 2,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: AspectRatio(
-                        aspectRatio: 1,
-                        child: QrImageView(
-                          data: qrData,
-                          version: QrVersions.auto,
                         ),
                       ),
-                    ),
+                      const SizedBox(height: 20),
+                      PulseAnimation(
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(borderRadius),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 10,
+                                spreadRadius: 5,
+                              ),
+                            ],
+                          ),
+                          child:
+                              qrImage == null
+                                  ? const CircularProgressIndicator()
+                                  : Column(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: const Color.fromARGB(
+                                              255, 254, 232, 198),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                        ),
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            IlluminatedIcon(
+                                              icon: Icons.local_fire_department,
+                                              size: 28,
+                                              lightModeColor: Colors.orange,
+                                              darkModeColor:
+                                                  Colors.orange.shade300,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              "$_checkInStreak ${themeProvider.getText('consecutive_days')}",
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Image.memory(
+                                        qrImage!,
+                                        width: 200,
+                                        height: 200,
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          "${themeProvider.getText('time_remaining')} ${_formatTime(_timeLeft)}",
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.white,
+                                          ),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
                   ),
-                  const SizedBox(height: 20),
-
-                  // Texto instructivo
-                  Text(
-                    themeProvider.getText('tap_qr_instruction'),
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium?.color?.withOpacity(0.7),
-                      fontStyle: FontStyle.italic,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                ],
+                ),
               ),
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 }

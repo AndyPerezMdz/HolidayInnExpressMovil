@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'screens/login_screen.dart';
 import 'screens/forgot_password_screen.dart';
+import 'screens/password_recovery_screen.dart';
 import 'providers/theme_provider.dart';
 import 'providers/auth_provider.dart';
 import 'widgets/auth_wrapper.dart';
@@ -42,6 +43,10 @@ class MyApp extends StatelessWidget {
                 return SlideLeftTransition(page: const AuthWrapper());
               case '/forgot-password':
                 return SlideLeftTransition(page: const ForgotPasswordScreen());
+              case '/password-recovery':
+                return SlideLeftTransition(
+                  page: const PasswordRecoveryScreen(),
+                );
               default:
                 return null;
             }

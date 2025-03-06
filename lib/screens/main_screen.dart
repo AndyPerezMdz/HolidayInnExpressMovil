@@ -5,6 +5,7 @@ import 'reports_screen.dart';
 import 'settings_screen.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
+import '../widgets/illuminated_icon.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -25,6 +26,7 @@ class _MainScreenState extends State<MainScreen> {
   ];
 
   static const Color primaryColor = Color.fromRGBO(35, 53, 103, 1);
+  static const Color unselectedDarkColor = Color.fromRGBO(128, 128, 128, 1);
 
   @override
   void dispose() {
@@ -52,18 +54,19 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       body: PageView(
         controller: _pageController,
         onPageChanged: _onPageChanged,
-        physics:
-            const NeverScrollableScrollPhysics(), // Desactivar el deslizamiento manual
+        physics: const PageScrollPhysics(),
         children: _screens,
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
-        selectedItemColor: primaryColor,
-        unselectedItemColor: Colors.grey,
+        selectedItemColor: isDarkMode ? Colors.white : primaryColor,
+        unselectedItemColor: isDarkMode ? unselectedDarkColor : Colors.grey,
         showSelectedLabels: true,
         showUnselectedLabels: true,
         type: BottomNavigationBarType.fixed,
@@ -73,19 +76,43 @@ class _MainScreenState extends State<MainScreen> {
         onTap: _onItemTapped,
         items: [
           BottomNavigationBarItem(
-            icon: const Icon(Icons.home),
+            icon: IlluminatedIcon(
+              icon: Icons.home,
+              size: 24,
+              lightModeColor: _selectedIndex == 0 ? primaryColor : Colors.grey,
+              darkModeColor:
+                  _selectedIndex == 0 ? Colors.white : unselectedDarkColor,
+            ),
             label: themeProvider.getText('home'),
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.qr_code),
+            icon: IlluminatedIcon(
+              icon: Icons.qr_code,
+              size: 24,
+              lightModeColor: _selectedIndex == 1 ? primaryColor : Colors.grey,
+              darkModeColor:
+                  _selectedIndex == 1 ? Colors.white : unselectedDarkColor,
+            ),
             label: themeProvider.getText('qr_menu'),
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.insert_drive_file),
+            icon: IlluminatedIcon(
+              icon: Icons.insert_drive_file,
+              size: 24,
+              lightModeColor: _selectedIndex == 2 ? primaryColor : Colors.grey,
+              darkModeColor:
+                  _selectedIndex == 2 ? Colors.white : unselectedDarkColor,
+            ),
             label: themeProvider.getText('reports_menu'),
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.settings),
+            icon: IlluminatedIcon(
+              icon: Icons.settings,
+              size: 24,
+              lightModeColor: _selectedIndex == 3 ? primaryColor : Colors.grey,
+              darkModeColor:
+                  _selectedIndex == 3 ? Colors.white : unselectedDarkColor,
+            ),
             label: themeProvider.getText('settings_menu'),
           ),
         ],

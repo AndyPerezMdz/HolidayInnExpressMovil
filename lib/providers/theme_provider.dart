@@ -17,6 +17,7 @@ class ThemeProvider extends ChangeNotifier {
       'dark_mode': 'Modo oscuro',
       'language': 'Idioma',
       'check_in_reminders': 'Recordatorios de check-in',
+      'check_in_reminders_desc': 'Recordatorios de check-in/out te recordarán hacer tu check-in/out.',
       'change_password': 'Cambiar contraseña',
       'change_password_desc': 'Actualiza tu contraseña de acceso',
       'help': 'Ayuda y soporte',
@@ -71,7 +72,7 @@ class ThemeProvider extends ChangeNotifier {
       'support_hours': 'Horario de atención',
       'faq_checkin_question': '¿Cómo funciona el check-in/out?',
       'faq_checkin_answer':
-          'El check-in/out se realiza escaneando el código QR en la sección correspondiente. El código se actualiza cada 5 minutos por seguridad.',
+          'El check-in/out se realiza escaneando el código QR en la sección correspondiente. El código se actualiza cada 15 segundos por seguridad.',
       'faq_reports_question': '¿Cómo puedo ver mis reportes?',
       'faq_reports_answer':
           'Los reportes están disponibles en la sección "Reportes". Puedes filtrarlos por mes y año, y descargarlos en formato PDF.',
@@ -103,7 +104,21 @@ class ThemeProvider extends ChangeNotifier {
       'feature_notifications_desc':
           'Sistema de recordatorios para check-in/out.',
       'consecutive_days': 'días consecutivos',
-      'tap_qr_instruction': 'Toca el código QR para simular un check-in',
+      'next': 'Siguiente',
+      'got_it': 'Entendido',
+      'tutorial_qr_title': 'Código QR',
+      'tutorial_qr_desc':
+          'Este es tu código QR personal. Se actualiza automáticamente cada 15 segundos por seguridad.',
+      'tutorial_checkin_title': 'Check-in/out',
+      'tutorial_streak_title': 'Racha de asistencia',
+      'tutorial_streak_desc':
+          'Aquí puedes ver tu racha actual de días consecutivos de asistencia.',
+      'pull_to_refresh': 'Desliza hacia abajo para actualizar',
+      'loading': 'Cargando...',
+      'error_loading': 'Error al cargar. Toca para reintentar.',
+      'success': '¡Éxito!',
+      'error': 'Error',
+      'retry': 'Reintentar',
     },
     'English': {
       'welcome': 'Welcome',
@@ -118,11 +133,12 @@ class ThemeProvider extends ChangeNotifier {
       'dark_mode': 'Dark Mode',
       'language': 'Language',
       'check_in_reminders': 'Check-in Reminders',
+      'check_in_reminders_desc': 'Check-in reminders will remind you to do your check-in/out.',
       'change_password': 'Change Password',
       'change_password_desc': 'Update your password',
       'help': 'Help & Support',
       'help_desc': 'FAQ and contact',
-      'about': 'About',
+      'about': 'About', 
       'about_desc': 'Version 1.0.0',
       'logout': 'Logout',
       'logout_confirm': 'Are you sure you want to log out?',
@@ -172,7 +188,7 @@ class ThemeProvider extends ChangeNotifier {
       'support_hours': 'Support hours',
       'faq_checkin_question': 'How does check-in/out work?',
       'faq_checkin_answer':
-          'Check-in/out is done by scanning the QR code in the corresponding section. The code updates every 5 minutes for security.',
+          'Check-in/out is done by scanning the QR code in the corresponding section. The code updates every 15 seconds for security.',
       'faq_reports_question': 'How can I view my reports?',
       'faq_reports_answer':
           'Reports are available in the "Reports" section. You can filter them by month and year, and download them in PDF format.',
@@ -203,7 +219,23 @@ class ThemeProvider extends ChangeNotifier {
       'feature_notifications': 'Notifications',
       'feature_notifications_desc': 'Check-in/out reminder system.',
       'consecutive_days': 'consecutive days',
-      'tap_qr_instruction': 'Tap the QR code to simulate check-in',
+      'next': 'Next',
+      'got_it': 'Got it',
+      'tutorial_qr_title': 'QR Code',
+      'tutorial_qr_desc':
+          'This is your personal QR code. It updates automatically every 15 seconds for security.',
+      'tutorial_checkin_title': 'Check-in/out',
+      'tutorial_checkin_desc':
+          'Tap the QR code to simulate check-in or check-out.',
+      'tutorial_streak_title': 'Attendance Streak',
+      'tutorial_streak_desc':
+          'Here you can see your current streak of consecutive attendance days.',
+      'pull_to_refresh': 'Pull down to refresh',
+      'loading': 'Loading...',
+      'error_loading': 'Error loading. Tap to try again.',
+      'success': 'Success!',
+      'error': 'Error',
+      'retry': 'Retry',
     },
   };
 

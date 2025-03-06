@@ -8,7 +8,7 @@ class CelebrationOverlay extends StatefulWidget {
   const CelebrationOverlay({
     super.key,
     required this.child,
-    this.showCelebration = false,
+    required this.showCelebration,
   });
 
   @override
@@ -18,25 +18,24 @@ class CelebrationOverlay extends StatefulWidget {
 class _CelebrationOverlayState extends State<CelebrationOverlay>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  final List<Particle> _particles = [];
-  final Random _random = Random();
+  List<Particle> particles = [];
+  final Random random = Random();
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
+      duration: const Duration(seconds: 2),
       vsync: this,
-      duration: const Duration(milliseconds: 1000),
     )..addListener(() {
-      for (var particle in _particles) {
-        particle.update();
-      }
-      setState(() {});
+      _updateParticles();
     });
+  }
 
-    if (widget.showCelebration) {
-      _startCelebration();
-    }
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -48,45 +47,63 @@ class _CelebrationOverlayState extends State<CelebrationOverlay>
   }
 
   void _startCelebration() {
-    _particles.clear();
-    for (int i = 0; i < 50; i++) {
-      _particles.add(
-        Particle(
-          random: _random,
-          screenSize: Size(
-            MediaQuery.of(context).size.width,
-            MediaQuery.of(context).size.height,
-          ),
-        ),
-      );
-    }
+    setState(() {
+      particles = List.generate(50, (index) => _createParticle());
+    });
     _controller.forward(from: 0);
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  Particle _createParticle() {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final centerX = screenWidth / 2;
+    final centerY = screenHeight / 2;
+
+    return Particle(
+      x: centerX,
+      y: centerY,
+      color: _getRandomColor(),
+      size: random.nextDouble() * 8 + 4,
+      velocity: Offset(
+        (random.nextDouble() - 0.5) * 15,
+        (random.nextDouble() - 0.5) * 15,
+      ),
+      angle: random.nextDouble() * pi * 2,
+      angularVelocity: (random.nextDouble() - 0.5) * 0.3,
+    );
+  }
+
+  Color _getRandomColor() {
+    final colors = [
+      Colors.red,
+      Colors.blue,
+      Colors.green,
+      Colors.yellow,
+      Colors.purple,
+      Colors.orange,
+    ];
+    return colors[random.nextInt(colors.length)];
+  }
+
+  void _updateParticles() {
+    if (!mounted) return;
+    setState(() {
+      for (var particle in particles) {
+        particle.update();
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
-      alignment: Alignment.center,
       children: [
         widget.child,
         if (widget.showCelebration)
-          LayoutBuilder(
-            builder: (context, constraints) {
-              return CustomPaint(
-                size: Size(constraints.maxWidth, constraints.maxHeight),
-                painter: ParticlePainter(
-                  particles: _particles,
-                  progress: _controller.value,
-                  screenSize: Size(constraints.maxWidth, constraints.maxHeight),
-                ),
-              );
-            },
+          Positioned.fill(
+            child: IgnorePointer(
+              child: CustomPaint(painter: ParticlePainter(particles)),
+            ),
           ),
       ],
     );
@@ -94,54 +111,59 @@ class _CelebrationOverlayState extends State<CelebrationOverlay>
 }
 
 class Particle {
-  late double x;
-  late double y;
-  late Color color;
-  late double speed;
-  late double theta;
-  late double radius;
-  final Random random;
-  final Size screenSize;
+  double x;
+  double y;
+  final Color color;
+  final double size;
+  Offset velocity;
+  double angle;
+  final double angularVelocity;
 
-  Particle({required this.random, required this.screenSize}) {
-    reset();
-  }
-
-  void reset() {
-    x = screenSize.width / 2;
-    y = screenSize.height / 2;
-    color = Colors.primaries[random.nextInt(Colors.primaries.length)];
-    speed = 1 + random.nextDouble() * 4;
-    theta = random.nextDouble() * 2 * pi;
-    radius = 2 + random.nextDouble() * 3;
-  }
+  Particle({
+    required this.x,
+    required this.y,
+    required this.color,
+    required this.size,
+    required this.velocity,
+    required this.angle,
+    required this.angularVelocity,
+  });
 
   void update() {
-    x += speed * cos(theta);
-    y += speed * sin(theta);
+    x += velocity.dx;
+    y += velocity.dy;
+    velocity = velocity.translate(0, 0.2); // Gravedad
+    angle += angularVelocity;
   }
 }
 
 class ParticlePainter extends CustomPainter {
   final List<Particle> particles;
-  final double progress;
-  final Size screenSize;
 
-  ParticlePainter({
-    required this.particles,
-    required this.progress,
-    required this.screenSize,
-  });
+  ParticlePainter(this.particles);
 
   @override
   void paint(Canvas canvas, Size size) {
     for (var particle in particles) {
       final paint =
           Paint()
-            ..color = particle.color.withOpacity(1 - progress)
+            ..color = particle.color
             ..style = PaintingStyle.fill;
 
-      canvas.drawCircle(Offset(particle.x, particle.y), particle.radius, paint);
+      canvas.save();
+      canvas.translate(particle.x, particle.y);
+      canvas.rotate(particle.angle);
+
+      // Dibujar una forma más interesante para cada partícula
+      final path =
+          Path()
+            ..moveTo(0, -particle.size / 2)
+            ..lineTo(particle.size / 2, particle.size / 2)
+            ..lineTo(-particle.size / 2, particle.size / 2)
+            ..close();
+
+      canvas.drawPath(path, paint);
+      canvas.restore();
     }
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../main.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
+import '../widgets/illuminated_icon.dart';
 
 class ReportsScreen extends StatefulWidget {
   const ReportsScreen({super.key});
@@ -155,7 +156,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
             selected: _selectedYear != null,
             onSelected: (_) => _showFilterDialog(context),
             backgroundColor: Theme.of(context).cardColor,
-            selectedColor: primaryColor.withOpacity(0.2),
+            selectedColor: primaryColor.withAlpha(51),
             labelStyle: TextStyle(
               color: Theme.of(context).textTheme.bodyLarge?.color,
             ),
@@ -166,7 +167,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
             selected: _selectedMonth != null,
             onSelected: (_) => _showFilterDialog(context),
             backgroundColor: Theme.of(context).cardColor,
-            selectedColor: primaryColor.withOpacity(0.2),
+            selectedColor: primaryColor.withAlpha(51),
             labelStyle: TextStyle(
               color: Theme.of(context).textTheme.bodyLarge?.color,
             ),
@@ -339,10 +340,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(borderRadius),
         ),
-        child: Icon(
-          Icons.insert_drive_file,
-          color: Theme.of(context).textTheme.bodyLarge?.color,
+        child: IlluminatedIcon(
+          icon: Icons.insert_drive_file,
           size: iconSize,
+          lightModeColor: Theme.of(context).textTheme.bodyLarge?.color,
         ),
       ),
       title: Text(
@@ -358,10 +359,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
         ),
       ),
       trailing: IconButton(
-        icon: Icon(
-          Icons.download,
+        icon: IlluminatedIcon(
+          icon: Icons.download,
           size: iconSize,
-          color: Theme.of(context).textTheme.bodyLarge?.color,
+          lightModeColor: Theme.of(context).textTheme.bodyLarge?.color,
         ),
         onPressed: () {
           _showDownloadNotification(title);

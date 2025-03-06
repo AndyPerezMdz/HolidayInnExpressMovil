@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/theme_provider.dart';
+import '../widgets/illuminated_icon.dart';
 import '../screens/profile_screen.dart';
 import '../screens/help_screen.dart';
 import '../screens/about_screen.dart';
 import '../providers/auth_provider.dart';
 import '../utils/page_transition.dart';
-import '../screens/forgot_password_screen.dart';
 import '../screens/login_screen.dart';
+import '../screens/password_recovery_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
   @override
-  _SettingsScreenState createState() => _SettingsScreenState();
+  State<SettingsScreen> createState() => SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class SettingsScreenState extends State<SettingsScreen> {
   bool _notificationsEnabled = true; // Nuevo estado
 
   void _toggleNotifications(bool value) {
@@ -145,7 +146,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               onTap: () {
                 Navigator.push(
                   context,
-                  SlideLeftTransition(page: const ForgotPasswordScreen()),
+                  SlideLeftTransition(page: const PasswordRecoveryScreen()),
                 );
               },
             ),
@@ -204,7 +205,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.logout, color: Colors.white),
+            IlluminatedIcon(
+              icon: Icons.logout,
+              size: 24,
+              lightModeColor: Colors.white,
+            ),
             SizedBox(width: 8),
             Text("Salir", style: buttonTextStyle),
           ],
@@ -227,7 +232,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       color: Theme.of(context).cardColor,
       child: ListTile(
-        leading: Icon(icon, color: Theme.of(context).primaryColor),
+        leading: IlluminatedIcon(
+          icon: icon,
+          size: 24,
+          lightModeColor: Theme.of(context).primaryColor,
+        ),
         title: Text(
           title,
           style: TextStyle(
@@ -240,9 +249,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             color: Theme.of(context).textTheme.bodyMedium?.color,
           ),
         ),
-        trailing: Icon(
-          Icons.chevron_right,
-          color: Theme.of(context).textTheme.bodyLarge?.color,
+        trailing: IlluminatedIcon(
+          icon: Icons.chevron_right,
+          size: 24,
+          lightModeColor: Theme.of(context).textTheme.bodyLarge?.color,
         ),
         onTap: onTap,
       ),
@@ -262,7 +272,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
         borderRadius: BorderRadius.circular(borderRadius),
       ),
       child: ListTile(
-        leading: Icon(icon, color: primaryColor),
+        leading: IlluminatedIcon(
+          icon: icon,
+          size: 24,
+          lightModeColor: primaryColor,
+        ),
         title: Text(title),
         trailing: Switch(
           value: value,
@@ -306,7 +320,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 style: TextStyle(
                   color: Theme.of(
                     context,
-                  ).textTheme.bodyMedium?.color?.withOpacity(0.7),
+                  ).textTheme.bodyMedium?.color?.withAlpha(179),
                 ),
               ),
             ),
