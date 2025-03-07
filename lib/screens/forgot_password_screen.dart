@@ -58,25 +58,27 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       _isLoading = false;
     });
 
-    if (response.statusCode == 200) {
-      // Manejar la respuesta exitosa
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Se ha enviado un enlace de recuperación a su correo electrónico.',
+    if (mounted) {
+      if (response.statusCode == 200) {
+        // Manejar la respuesta exitosa
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Se ha enviado un enlace de recuperación a su correo electrónico.',
+            ),
+            backgroundColor: Colors.green,
           ),
-          backgroundColor: Colors.green,
-        ),
-      );
-      Navigator.pop(context); // Regresar a la pantalla anterior
-    } else {
-      // Manejar el error
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: ${json.decode(response.body)['message']}'),
-          backgroundColor: Colors.red,
-        ),
-      );
+        );
+        Navigator.pop(context); // Regresar a la pantalla anterior
+      } else {
+        // Manejar el error
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${json.decode(response.body)['message']}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 

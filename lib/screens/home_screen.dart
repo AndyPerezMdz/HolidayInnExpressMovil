@@ -100,7 +100,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final authProvider = Provider.of<AuthProvider>(context);
-    final lastCheckIn = authProvider.currentUser?.lastCheckIn ?? 'No hay historial';
+    final lastCheckIn =
+        authProvider.currentUser?.lastCheckIn ?? 'No hay historial';
     final lastCheckOut =
         authProvider.currentUser?.lastCheckOut ?? 'No hay historial';
 
@@ -270,7 +271,12 @@ class _HomeScreenState extends State<HomeScreen> {
           BoxShadow(
             color:
                 Theme.of(context).brightness == Brightness.dark
-                    ? Colors.black.withAlpha(51)
+                    ? Colors.black.withValues(
+                      alpha: 128,
+                      red: 0,
+                      green: 0,
+                      blue: 0,
+                    )
                     : Colors.grey.withAlpha(26),
             spreadRadius: 0,
             blurRadius: 15,
@@ -470,7 +476,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.5),
+                    color: Colors.black.withValues(
+                      alpha: 128,
+                      red: 0,
+                      green: 0,
+                      blue: 0,
+                    ),
                     spreadRadius: 2,
                     blurRadius: 8,
                     offset: const Offset(0, 4),

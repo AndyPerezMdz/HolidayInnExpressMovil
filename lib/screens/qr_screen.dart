@@ -215,7 +215,12 @@ class _QRScreenState extends State<QRScreen>
                             borderRadius: BorderRadius.circular(borderRadius),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
+                                color: Colors.black.withValues(
+                                  alpha: 26,
+                                  red: 0,
+                                  green: 0,
+                                  blue: 0,
+                                ),
                                 blurRadius: 10,
                                 spreadRadius: 5,
                               ),

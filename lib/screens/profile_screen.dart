@@ -348,8 +348,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 decoration: BoxDecoration(
                   color:
                       value.toLowerCase() == 'activo'
-                          ? Colors.green.withOpacity(0.2)
-                          : Colors.red.withOpacity(0.2),
+                          ? Colors.green.withValues(
+                            alpha: 51,
+                            red: 0,
+                            green: 255,
+                            blue: 0,
+                          )
+                          : Colors.red.withValues(
+                            alpha: 51,
+                            red: 255,
+                            green: 0,
+                            blue: 0,
+                          ),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
