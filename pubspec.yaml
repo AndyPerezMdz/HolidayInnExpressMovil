@@ -58,4 +58,7 @@ flutter:
 flutter_icons:
   android: true
   ios: true
-  image_path: "assets/icon_logo.png"
+  image_path: "assets/icon_logo.png" # Ruta correcta del icono
+  adaptive_icon_foreground: "assets/icon_logo.png" # Usa el mismo icono si no tienes foreground
+  adaptive_icon_background: "#233567" # Color de fondo para íconos adaptativos
+

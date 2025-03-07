@@ -3,6 +3,8 @@ import '../models/check_record.dart';
 import '../models/advertisement.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
@@ -168,17 +170,15 @@ class ApiService {
     }
   }
 
-  Future<Map<String, dynamic>> getLastCheckInOut(String employeeId) async {
-    try {
-      final response = await _client.get(
-        '/api/securityBooth/history/$employeeId',
-      );
-      return response.data;
-    } catch (e) {
-      if (e.toString().contains('404')) {
-        throw Exception('No hay registros de asistencia disponibles');
-      }
-      throw Exception('Error al obtener último registro: $e');
+  Future<Map<String, dynamic>> getLastCheckInOut(String userId) async {
+    final response = await http.get(
+      Uri.parse('https://devmace.onrender.com/api/employees/profile/$userId'),
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Error al cargar datos');
     }
   }
 

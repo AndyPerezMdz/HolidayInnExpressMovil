@@ -15,7 +15,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final ApiService _apiService = ApiService();
-  Map<String, dynamic>? _lastCheckInOut;
   List<Advertisement> _announcements = [];
   bool _isLoading = true;
   String? _error;
@@ -39,6 +38,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
       if (userId != null) {
         try {
+          // Remove the following block since it's no longer needed
+          /*
           final lastCheckInOut = await _apiService.getLastCheckInOut(userId);
           debugPrint('Respuesta completa de último registro: $lastCheckInOut');
 
@@ -51,8 +52,9 @@ class _HomeScreenState extends State<HomeScreen> {
               };
             });
           }
+          */
         } catch (e) {
-          debugPrint('Error detallado al cargar último registro: $e');
+          debugPrint('Error al cargar último registro: $e');
         }
 
         try {
@@ -97,6 +99,18 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    final authProvider = Provider.of<AuthProvider>(context);
+    final lastCheckIn = authProvider.currentUser?.lastCheckIn ?? 'No hay historial';
+    final lastCheckOut =
+        authProvider.currentUser?.lastCheckOut ?? 'No hay historial';
+
+    // Suponiendo que lastCheckIn y lastCheckOut son cadenas de texto
+    // Si son DateTime, puedes formatearlos aquí
+    String checkInTime =
+        lastCheckIn; // Aquí puedes formatear la hora si es necesario
+    String checkOutTime =
+        lastCheckOut; // Aquí puedes formatear la hora si es necesario
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -143,30 +157,17 @@ class _HomeScreenState extends State<HomeScreen> {
               _buildInfoCard(
                 context,
                 title: themeProvider.getText('last_entry'),
-                time:
-                    _lastCheckInOut != null &&
-                            _lastCheckInOut!['lastCheckIn'] != null
-                        ? _lastCheckInOut!['lastCheckIn']
-                        : 'No hay registro de check-in',
-                date: '', // You can format the date if needed
-                imageUrl:
-                    'assets/check-in.jpg', // Replace with actual image URL
+                time: 'Hora: $checkInTime', // Mostrar la hora del check-in
+                date: '', // Puedes formatear la fecha si es necesario
+                imageUrl: 'assets/check-in.jpg',
               ),
               const SizedBox(height: 20),
               _buildInfoCard(
                 context,
                 title: themeProvider.getText('last_exit'),
-                time:
-                    _lastCheckInOut != null &&
-                            _lastCheckInOut!['lastCheckOut'] != null
-                        ? _formatDateTime(
-                          DateTime.parse(
-                            _lastCheckInOut!['lastCheckOut']['timestamp'],
-                          ),
-                        )
-                        : 'No hay registro de check-out',
-                date: '', // You can format the date if needed
-                imageUrl: 'assets/check-out.jpg', // Correct usage
+                time: 'Hora: $checkOutTime', // Mostrar la hora del check-out
+                date: '', // Puedes formatear la fecha si es necesario
+                imageUrl: 'assets/check-out.jpg',
               ),
               const SizedBox(height: 20),
               Text(
@@ -248,10 +249,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
-  }
-
-  String _formatDateTime(DateTime date) {
-    return "${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
   }
 
   String _formatDate(DateTime date) {
@@ -452,25 +449,33 @@ class _HomeScreenState extends State<HomeScreen> {
     required String imageUrl,
   }) {
     return Card(
-      elevation: 8,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      elevation: 10,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       color:
           Theme.of(context).brightness == Brightness.dark
-              ? const Color(0xFF1A1A1A)
+              ? const Color(0xFF2A2A2A)
               : const Color(0xFFEFEFEF),
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Row(
           children: [
             Container(
-              width: 60,
-              height: 60,
+              width: 70,
+              height: 70,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(12),
                 image: DecorationImage(
                   image: AssetImage(imageUrl),
                   fit: BoxFit.cover,
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 8,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
               ),
             ),
             const SizedBox(width: 16),
@@ -480,23 +485,35 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
-                      fontSize: 18,
+                    style: TextStyle(
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
+                      color:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black87,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 6),
                   Text(
                     time,
                     style: TextStyle(
-                      color: Theme.of(context).textTheme.bodyMedium?.color,
+                      color:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white70
+                              : Theme.of(context).textTheme.bodyMedium?.color,
+                      fontSize: 16,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     date,
                     style: TextStyle(
-                      color: Theme.of(context).textTheme.bodyMedium?.color,
+                      color:
+                          Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white54
+                              : Theme.of(context).textTheme.bodyMedium?.color,
+                      fontSize: 14,
                     ),
                   ),
                 ],
