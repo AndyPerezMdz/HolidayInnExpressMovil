@@ -37,12 +37,8 @@ class _MainScreenState extends State<MainScreen> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      _pageController.animateToPage(
-        index,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOutCubic,
-      );
     });
+    _pageController.jumpToPage(index);
   }
 
   void _onPageChanged(int index) {
@@ -60,63 +56,68 @@ class _MainScreenState extends State<MainScreen> {
       body: PageView(
         controller: _pageController,
         onPageChanged: _onPageChanged,
-        physics: const PageScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         children: _screens,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        selectedItemColor: isDarkMode ? Colors.white : primaryColor,
-        unselectedItemColor: isDarkMode ? unselectedDarkColor : Colors.grey,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        type: BottomNavigationBarType.fixed,
-        iconSize: 24,
-        selectedFontSize: 12,
-        unselectedFontSize: 12,
-        onTap: _onItemTapped,
-        items: [
-          BottomNavigationBarItem(
-            icon: IlluminatedIcon(
-              icon: Icons.home,
-              size: 24,
-              lightModeColor: _selectedIndex == 0 ? primaryColor : Colors.grey,
-              darkModeColor:
-                  _selectedIndex == 0 ? Colors.white : unselectedDarkColor,
-            ),
-            label: themeProvider.getText('home'),
+      bottomNavigationBar: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          BottomNavigationBar(
+            currentIndex: _selectedIndex,
+            selectedItemColor: isDarkMode ? Colors.white : primaryColor, 
+            unselectedItemColor: isDarkMode ? unselectedDarkColor : Colors.grey,
+            showSelectedLabels: true,
+            showUnselectedLabels: true,
+            type: BottomNavigationBarType.fixed,
+            iconSize: 24,
+            selectedFontSize: 12,
+            unselectedFontSize: 12,
+            onTap: _onItemTapped,
+            items: [
+              BottomNavigationBarItem(
+                icon: _buildIcon(Icons.home, 0, themeProvider),
+                label: themeProvider.getText('home'),
+              ),
+              BottomNavigationBarItem(
+                icon: _buildIcon(Icons.qr_code, 1, themeProvider),
+                label: themeProvider.getText('qr_menu'),
+              ),
+              BottomNavigationBarItem(
+                icon: _buildIcon(Icons.insert_drive_file, 2, themeProvider),
+                label: themeProvider.getText('reports_menu'),
+              ),
+              BottomNavigationBarItem(
+                icon: _buildIcon(Icons.settings, 3, themeProvider),
+                label: themeProvider.getText('settings_menu'),
+              ),
+            ],
           ),
-          BottomNavigationBarItem(
-            icon: IlluminatedIcon(
-              icon: Icons.qr_code,
-              size: 24,
-              lightModeColor: _selectedIndex == 1 ? primaryColor : Colors.grey,
-              darkModeColor:
-                  _selectedIndex == 1 ? Colors.white : unselectedDarkColor,
+          // Línea en la orilla de la barra de navegación
+          AnimatedPositioned(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            top: 0,
+            left: MediaQuery.of(context).size.width / 4 * _selectedIndex,
+            child: Container(
+              height: 4, // Altura de la línea
+              width:
+                  MediaQuery.of(context).size.width /
+                  4, // Ancho de la línea igual al ancho de un ícono
+              color: primaryColor, // Color de la línea
             ),
-            label: themeProvider.getText('qr_menu'),
-          ),
-          BottomNavigationBarItem(
-            icon: IlluminatedIcon(
-              icon: Icons.insert_drive_file,
-              size: 24,
-              lightModeColor: _selectedIndex == 2 ? primaryColor : Colors.grey,
-              darkModeColor:
-                  _selectedIndex == 2 ? Colors.white : unselectedDarkColor,
-            ),
-            label: themeProvider.getText('reports_menu'),
-          ),
-          BottomNavigationBarItem(
-            icon: IlluminatedIcon(
-              icon: Icons.settings,
-              size: 24,
-              lightModeColor: _selectedIndex == 3 ? primaryColor : Colors.grey,
-              darkModeColor:
-                  _selectedIndex == 3 ? Colors.white : unselectedDarkColor,
-            ),
-            label: themeProvider.getText('settings_menu'),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildIcon(IconData icon, int index, ThemeProvider themeProvider) {
+    bool isSelected = _selectedIndex == index;
+    return IlluminatedIcon(
+      icon: icon,
+      size: 24,
+      lightModeColor: isSelected ? primaryColor : Colors.grey,
+      darkModeColor: isSelected ? Colors.white : unselectedDarkColor,
     );
   }
 }

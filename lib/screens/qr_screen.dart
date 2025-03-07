@@ -154,7 +154,7 @@ class _QRScreenState extends State<QRScreen>
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       const Divider(color: Colors.grey),
                       const SizedBox(height: 10),
                       Text(
@@ -165,7 +165,7 @@ class _QRScreenState extends State<QRScreen>
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       PulseAnimation(
                         child: GestureDetector(
                           onTap: _isLoading ? null : _regenerateQR,
@@ -230,9 +230,14 @@ class _QRScreenState extends State<QRScreen>
                                         padding: const EdgeInsets.all(8),
                                         decoration: BoxDecoration(
                                           color: const Color.fromARGB(
-                                              255, 254, 232, 198),
-                                          borderRadius:
-                                              BorderRadius.circular(8),
+                                            255,
+                                            254,
+                                            232,
+                                            198,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
                                         ),
                                         child: Row(
                                           mainAxisSize: MainAxisSize.min,
@@ -244,7 +249,7 @@ class _QRScreenState extends State<QRScreen>
                                               darkModeColor:
                                                   Colors.orange.shade300,
                                             ),
-                                            const SizedBox(width: 8),
+                                            const SizedBox(width: 20),
                                             Text(
                                               "$_checkInStreak ${themeProvider.getText('consecutive_days')}",
                                               style: const TextStyle(
@@ -259,32 +264,30 @@ class _QRScreenState extends State<QRScreen>
                                       const SizedBox(height: 10),
                                       Image.memory(
                                         qrImage!,
-                                        width: 200,
-                                        height: 200,
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Container(
-                                        padding: const EdgeInsets.all(8),
-                                        decoration: BoxDecoration(
-                                          color: Colors.red,
-                                          borderRadius: BorderRadius.circular(
-                                            8,
-                                          ),
-                                        ),
-                                        child: Text(
-                                          "${themeProvider.getText('time_remaining')} ${_formatTime(_timeLeft)}",
-                                          style: const TextStyle(
-                                            fontSize: 16,
-                                            color: Colors.white,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
+                                        width: 250,
+                                        height: 250,
                                       ),
                                     ],
                                   ),
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          "${themeProvider.getText('time_remaining')} ${_formatTime(_timeLeft)}",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
                     ],
                   ),
                 ),

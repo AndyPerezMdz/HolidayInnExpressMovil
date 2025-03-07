@@ -150,7 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         : 'No hay registro de check-in',
                 date: '', // You can format the date if needed
                 imageUrl:
-                    'https://t4.ftcdn.net/jpg/12/51/06/01/240_F_1251060186_3C9Pn66krfVNaxpcH1KkSmIo3SvSavWi.jpg', // Replace with actual image URL
+                    'assets/check-in.jpg', // Replace with actual image URL
               ),
               const SizedBox(height: 20),
               _buildInfoCard(
@@ -166,8 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         )
                         : 'No hay registro de check-out',
                 date: '', // You can format the date if needed
-                imageUrl:
-                    'https://t4.ftcdn.net/jpg/10/75/67/77/240_F_1075677703_FpDiLRjkEkoJZ8txclUHb2zU2U7kc9KK.jpg', // Replace with actual image URL
+                imageUrl: 'assets/check-out.jpg', // Correct usage
               ),
               const SizedBox(height: 20),
               Text(
@@ -301,7 +300,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: const IlluminatedIcon(
                     icon: Icons.campaign,
                     size: 28,
-                    lightModeColor:  Color(0xFF233567),
+                    lightModeColor: Color(0xFF233567),
                     darkModeColor: Colors.white,
                   ),
                 ),
@@ -465,7 +464,7 @@ class _HomeScreenState extends State<HomeScreen> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 image: DecorationImage(
-                  image: NetworkImage(imageUrl),
+                  image: AssetImage(imageUrl),
                   fit: BoxFit.cover,
                 ),
               ),

@@ -49,6 +49,9 @@ flutter:
     - assets/logo.png
     - assets/holidayinnexpressbanner.png
     - assets/holidayinnexpressbanner-sinfondo.png
+    - assets/icon_logo.png
+    - assets/check-in.jpg
+    - assets/check-out.jpg
 
 # Configuración para cambiar el ícono de la app
 flutter_icons:

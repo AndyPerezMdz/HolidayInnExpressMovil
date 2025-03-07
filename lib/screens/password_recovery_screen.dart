@@ -30,18 +30,29 @@ class PasswordRecoveryScreen extends StatelessWidget {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text('Confirmar'),
-          content: const Text(
+          backgroundColor: Theme.of(context).colorScheme.surface,
+          title: Text(
+            'Confirmar',
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+          ),
+          content: Text(
             '¿Está seguro de que desea restablecer su contraseña?',
+            style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: const Text('Cancelar'),
+              child: Text(
+                'Cancelar',
+                style: TextStyle(color: Theme.of(context).colorScheme.primary),
+              ),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: const Text('Confirmar'),
+              child: Text(
+                'Confirmar',
+                style: TextStyle(color: Theme.of(context).colorScheme.primary),
+              ),
             ),
           ],
         );

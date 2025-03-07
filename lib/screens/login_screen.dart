@@ -120,13 +120,24 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xFF1B2B39), Color(0xFF0E1A26)],
+            colors:
+                isDarkMode
+                    ? [
+                      const Color(0xFF0E1A26),
+                      const Color(0xFF1B2B39),
+                    ] // Colores para modo oscuro
+                    : [
+                      const Color(0xFF1B2B39),
+                      const Color(0xFF0E1A26),
+                    ], // Colores para modo claro
           ),
         ),
         child: SafeArea(
@@ -274,7 +285,7 @@ class _LoginScreenState extends State<LoginScreen> {
           icon: icon,
           size: 24,
           lightModeColor: const Color.fromARGB(129, 0, 0, 0),
-          darkModeColor: const Color.fromARGB(129, 255, 255, 255),
+          darkModeColor: const Color.fromARGB(129, 0, 0, 0),
         ),
         suffixIcon:
             isPassword
@@ -286,7 +297,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             : Icons.visibility_off,
                     size: 24,
                     lightModeColor: const Color.fromARGB(129, 0, 0, 0),
-                    darkModeColor: const Color.fromARGB(129, 255, 255, 255),
+                    darkModeColor: const Color.fromARGB(129, 0, 0, 0),
                   ),
                   onPressed: () {
                     setState(() {
