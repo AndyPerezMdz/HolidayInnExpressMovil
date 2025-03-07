@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'screens/login_screen.dart';
 import 'screens/forgot_password_screen.dart';
 import 'screens/password_recovery_screen.dart';
+import 'screens/splash_screen.dart';
 import 'providers/theme_provider.dart';
 import 'providers/auth_provider.dart';
 import 'widgets/auth_wrapper.dart';
@@ -34,10 +35,12 @@ class MyApp extends StatelessWidget {
           title: 'Holiday Inn Express',
           theme: themeProvider.currentTheme,
           navigatorKey: navigatorKey,
-          initialRoute: '/',
+          initialRoute: '/splash',
           onGenerateRoute: (settings) {
             switch (settings.name) {
-              case '/':
+              case '/splash':
+                return SlideLeftTransition(page: const SplashScreen());
+              case '/login':
                 return SlideLeftTransition(page: const LoginScreen());
               case '/main':
                 return SlideLeftTransition(page: const AuthWrapper());

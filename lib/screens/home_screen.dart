@@ -452,8 +452,12 @@ class _HomeScreenState extends State<HomeScreen> {
     required String imageUrl,
   }) {
     return Card(
-      elevation: 4,
+      elevation: 8,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+      color:
+          Theme.of(context).brightness == Brightness.dark
+              ? const Color(0xFF1A1A1A)
+              : const Color(0xFFEFEFEF),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
