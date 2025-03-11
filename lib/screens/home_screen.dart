@@ -100,10 +100,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final authProvider = Provider.of<AuthProvider>(context);
-    final lastCheckIn =
-        authProvider.currentUser?.lastCheckIn ?? 'No hay historial';
-    final lastCheckOut =
-        authProvider.currentUser?.lastCheckOut ?? 'No hay historial';
+    final lastCheckIn = authProvider.currentUser?.lastCheckIn ?? 'No hay historial';
+    final lastCheckOut = authProvider.currentUser?.lastCheckOut ?? 'No hay historial';
 
     // Suponiendo que lastCheckIn y lastCheckOut son cadenas de texto
     // Si son DateTime, puedes formatearlos aquí
@@ -128,6 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: RefreshIndicator(
+        
         onRefresh: _refreshData,
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),

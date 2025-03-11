@@ -211,16 +211,28 @@ class _QRScreenState extends State<QRScreen>
                         child: Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? const Color(0xFF2A2A2A)
+                                    : Colors.white,
                             borderRadius: BorderRadius.circular(borderRadius),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withValues(
-                                  alpha: 26,
-                                  red: 0,
-                                  green: 0,
-                                  blue: 0,
-                                ),
+                                color:
+                                    Theme.of(context).brightness ==
+                                            Brightness.dark
+                                        ? const Color.fromARGB(
+                                          31,
+                                          0,
+                                          0,
+                                          0,
+                                        ).withValues(
+                                          alpha: 128,
+                                          red: 0,
+                                          green: 0,
+                                          blue: 0,
+                                        )
+                                        : Colors.grey.withAlpha(26),
                                 blurRadius: 10,
                                 spreadRadius: 5,
                               ),
