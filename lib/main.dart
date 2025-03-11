@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       builder: (context, themeProvider, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Holiday Inn Express',  // Este es el nombre que aparecerá en el multitarea
+          title: 'Holiday Inn Express',
           theme: themeProvider.currentTheme,
           navigatorKey: navigatorKey,
           initialRoute: '/splash',
