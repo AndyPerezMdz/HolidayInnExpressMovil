@@ -255,33 +255,13 @@ class _HomeScreenState extends State<HomeScreen> {
     return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
   }
 
-  Widget _buildAnnouncementCard(
-    BuildContext context, {
-    required Advertisement announcement,
-  }) {
+  Widget _buildAnnouncementCard(BuildContext context, {required Advertisement announcement}) {
     return Container(
       decoration: BoxDecoration(
-        color:
-            Theme.of(context).brightness == Brightness.dark
-                ? const Color(0xFF233567).withAlpha(51)
-                : Colors.white,
+        color: Theme.of(context).brightness == Brightness.dark
+            ? Colors.black.withAlpha(51)  // Changed from withOpacity(0.2)
+            : Colors.grey.withAlpha(26),   // Changed from withOpacity(0.1)
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color:
-                Theme.of(context).brightness == Brightness.dark
-                    ? Colors.black.withValues(
-                      alpha: 128,
-                      red: 0,
-                      green: 0,
-                      blue: 0,
-                    )
-                    : Colors.grey.withAlpha(26),
-            spreadRadius: 0,
-            blurRadius: 15,
-            offset: const Offset(0, 5),
-          ),
-        ],
       ),
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -446,20 +426,19 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildInfoCard(
-    BuildContext context, {
+  Widget _buildInfoCard(BuildContext context, {
     required String title,
     required String time,
     required String date,
     required String imageUrl,
   }) {
-    return Card(
-      elevation: 10,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      color:
-          Theme.of(context).brightness == Brightness.dark
-              ? const Color(0xFF2A2A2A)
-              : const Color(0xFFEFEFEF),
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).brightness == Brightness.dark
+            ? Colors.black.withAlpha(51)  // Changed from withOpacity(0.2)
+            : Colors.grey.withAlpha(26),   // Changed from withOpacity(0.1)
+        borderRadius: BorderRadius.circular(20),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Row(
@@ -473,19 +452,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   image: AssetImage(imageUrl),
                   fit: BoxFit.cover,
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(
-                      alpha: 128,
-                      red: 0,
-                      green: 0,
-                      blue: 0,
-                    ),
-                    spreadRadius: 2,
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
+                // Removed only the boxShadow, keeping the container and image
               ),
             ),
             const SizedBox(width: 16),

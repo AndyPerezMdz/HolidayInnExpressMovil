@@ -211,81 +211,58 @@ class _QRScreenState extends State<QRScreen>
                         child: Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                    ? const Color(0xFF2A2A2A)
-                                    : Colors.white,
+                            color: Theme.of(context).brightness == Brightness.dark
+                                ? Colors.grey[850]  // Color más oscuro para modo oscuro
+                                : Colors.grey[100], // Color más claro para modo claro
                             borderRadius: BorderRadius.circular(borderRadius),
-                            boxShadow: [
-                              BoxShadow(
-                                color:
-                                    Theme.of(context).brightness ==
-                                            Brightness.dark
-                                        ? const Color.fromARGB(
-                                          31,
-                                          0,
-                                          0,
-                                          0,
-                                        ).withValues(
-                                          alpha: 128,
-                                          red: 0,
-                                          green: 0,
-                                          blue: 0,
-                                        )
-                                        : Colors.grey.withAlpha(26),
-                                blurRadius: 10,
-                                spreadRadius: 5,
-                              ),
-                            ],
                           ),
-                          child:
-                              qrImage == null
-                                  ? const CircularProgressIndicator()
-                                  : Column(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(8),
-                                        decoration: BoxDecoration(
-                                          color: const Color.fromARGB(
-                                            255,
-                                            254,
-                                            232,
-                                            198,
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            8,
+                          child: qrImage == null
+                              ? const CircularProgressIndicator()
+                              : Column(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: const Color.fromARGB(
+                                        255,
+                                        254,
+                                        232,
+                                        198,
+                                      ),
+                                      borderRadius: BorderRadius.circular(
+                                        8,
+                                      ),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        IlluminatedIcon(
+                                          icon: Icons.local_fire_department,
+                                          size: 28,
+                                          lightModeColor: Colors.orange,
+                                          darkModeColor:
+                                              Colors.orange.shade300,
+                                        ),
+                                        const SizedBox(width: 20),
+                                        Text(
+                                          "$_checkInStreak ${themeProvider.getText('consecutive_days')}",
+                                          style: const TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
                                           ),
                                         ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            IlluminatedIcon(
-                                              icon: Icons.local_fire_department,
-                                              size: 28,
-                                              lightModeColor: Colors.orange,
-                                              darkModeColor:
-                                                  Colors.orange.shade300,
-                                            ),
-                                            const SizedBox(width: 20),
-                                            Text(
-                                              "$_checkInStreak ${themeProvider.getText('consecutive_days')}",
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Image.memory(
-                                        qrImage!,
-                                        width: 250,
-                                        height: 250,
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
+                                  const SizedBox(height: 10),
+                                  Image.memory(
+                                    qrImage!,
+                                    width: 250,
+                                    height: 250,
+                                  ),
+                                ],
+                              ),
                         ),
                       ),
                       const SizedBox(height: 10),
