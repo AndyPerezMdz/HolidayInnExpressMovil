@@ -136,13 +136,13 @@ class SettingsScreenState extends State<SettingsScreen> {
 
             const SizedBox(height: 20),
             // Sección de Seguridad
-            Text("Seguridad", style: _getTitleStyle(context)),
+            Text(themeProvider.getText('security'), style: _getTitleStyle(context)),
             const SizedBox(height: 8),
             _buildSettingCard(
               context,
               icon: Icons.lock,
-              title: "Cambiar contraseña",
-              subtitle: "Actualiza tu contraseña de acceso",
+              title: themeProvider.getText('change_password'),
+              subtitle: themeProvider.getText('change_password_desc'),
               onTap: () {
                 Navigator.push(
                   context,

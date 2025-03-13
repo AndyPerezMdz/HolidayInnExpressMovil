@@ -68,7 +68,7 @@ class AboutScreen extends StatelessWidget {
                   Image.asset('assets/logo.png', height: 100),
                   const SizedBox(height: 16),
                   Text(
-                    'Holiday Inn Express',
+                    themeProvider.getText('holiday_inn_express'), 
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -96,6 +96,27 @@ class AboutScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             ...features.map((feature) => _buildFeatureCard(context, feature)),
+            const SizedBox(height: 32),
+            Center(
+              child: Column(
+                children: [
+                  Text(
+                    themeProvider.getText('developed_by'), // Cambiar "Desarrollado por"
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Theme.of(context).textTheme.bodyMedium?.color,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Image.asset(
+                    Theme.of(context).brightness == Brightness.dark
+                        ? 'assets/DevMaceLogoW.png'
+                        : 'assets/DevMaceLogoB.png',
+                    height: 40,
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

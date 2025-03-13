@@ -53,6 +53,8 @@ flutter:
     - assets/icon_logo.png
     - assets/check-in.jpg
     - assets/check-out.jpg
+    - assets/DevMaceLogoB.png
+    - assets/DevMaceLogoW.png
 
 # Configuración para cambiar el ícono de la app
 flutter_icons:
