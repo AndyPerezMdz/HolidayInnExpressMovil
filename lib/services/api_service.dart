@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:async';
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
@@ -16,7 +17,12 @@ class ApiService {
 
   String? get token => _client.token;
 
-  ApiService._internal() : _client = ApiClient();
+  ApiService._internal() : _client = ApiClient() {
+    // Configurar timeouts para todas las peticiones
+    _client.dio.options.connectTimeout = const Duration(seconds: 30);
+    _client.dio.options.receiveTimeout = const Duration(seconds: 30);
+    _client.dio.options.sendTimeout = const Duration(seconds: 30);
+  }
 
   // Auth endpoints
   Future<Map<String, dynamic>> login(String email, String password) async {
@@ -24,6 +30,13 @@ class ApiService {
       final response = await _client.post(
         '/auth/login',
         data: {'email': email, 'password': password},
+      ).timeout(
+        const Duration(seconds: 30),
+        onTimeout: () {
+          throw TimeoutException(
+            'El servidor está tardando en responder. Por favor, espera un momento.',
+          );
+        },
       );
 
       debugPrint('Respuesta completa de login: ${response.data}');
@@ -41,6 +54,13 @@ class ApiService {
     } catch (e) {
       debugPrint('Error en login: $e');
       if (e is DioException) {
+        if (e.type == DioExceptionType.connectionTimeout ||
+            e.type == DioExceptionType.receiveTimeout ||
+            e.type == DioExceptionType.sendTimeout) {
+          throw TimeoutException(
+            'El servidor está tardando en responder. Por favor, espera un momento.',
+          );
+        }
         if (e.response?.statusCode == 401) {
           final errorMessage =
               e.response?.data['message'] ?? 'Credenciales inválidas';
