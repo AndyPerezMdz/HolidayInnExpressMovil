@@ -1,16 +1,34 @@
-# holidayinnexpressmovil
+# Holiday Inn Express - Sistema de Control de Asistencia
+## Descripción General
+Aplicación móvil desarrollada en Flutter para la gestión y control de asistencia de empleados de Holiday Inn Express. El sistema implementa un innovador método de registro mediante códigos QR dinámicos, ofreciendo una solución moderna y segura para el control de entradas y salidas del personal.
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Características Principales
+### Sistema de Asistencia
+- Generación de códigos QR dinámicos que se actualizan cada 15 segundos
+- Registro de entradas y salidas mediante escaneo de QR
+- Historial detallado de asistencia
+- Generación de reportes mensuales
+### Gestión de Usuarios
+- Perfiles personalizados para cada empleado
+- Información detallada del personal
+- Sistema de roles y departamentos
+- Gestión de datos de contacto y laborales
+### Interfaz y Experiencia de Usuario
+- Diseño intuitivo y moderno
+- Soporte bilingüe (Español/Inglés)
+- Modo claro/oscuro
+- Interfaz adaptativa y responsiva
+- Animaciones fluidas para mejor experiencia
+### Seguridad
+- Sistema robusto de autenticación
+- Tokens de seguridad
+- Actualización automática de códigos QR
+- Protección de datos sensibles
+### Características Adicionales
+- Sistema de notificaciones para recordatorios
+- Panel de anuncios por departamento
+- Estadísticas de asistencia
+- Soporte técnico integrado
+- Preguntas frecuentes y ayuda
+## Objetivo del Proyecto
+Modernizar y optimizar el proceso de registro de asistencia en Holiday Inn Express, proporcionando una herramienta confiable y fácil de usar que mejore la eficiencia en la gestión del personal y el seguimiento de la asistencia.
