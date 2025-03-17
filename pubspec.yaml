@@ -5,7 +5,7 @@ description: "A new Flutter project."
 publish_to: 'none'
 
 # Versión de la app
-version: 1.0.0+1
+version: 1.0.8+1
 
 # Versión de Flutter y Dart
 environment:

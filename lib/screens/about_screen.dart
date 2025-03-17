@@ -76,7 +76,7 @@ class AboutScreen extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    'v1.0.0',
+                    'v1.0.8',
                     style: TextStyle(
                       fontSize: 16,
                       color: Theme.of(context).textTheme.bodyMedium?.color,
