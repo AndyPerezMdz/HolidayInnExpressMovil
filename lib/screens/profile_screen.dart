@@ -104,7 +104,35 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProviderStateMixin {
+  late AnimationController _pulseController;
+  late Animation<double> _pulseAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseController = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
+    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.5).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    )..addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _pulseController.reverse();
+      } else if (status == AnimationStatus.dismissed) {
+        _pulseController.forward();
+      }
+    });
+    _pulseController.forward();
+  }
+
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    super.dispose();
+  }
+
   static const double borderRadius = 8.0;
   bool _isLoading = false;
 
@@ -164,10 +192,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final authProvider = Provider.of<AuthProvider>(context);
     final user = authProvider.currentUser;
 
-    if (user == null || _isLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -192,69 +216,81 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: RefreshIndicator(
         onRefresh: _refreshUserData,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildProfileHeader(user),
-              const SizedBox(height: 20),
-              _buildSectionTitle(themeProvider.getText('personal_info')),
-              _buildInfoCard(
-                context,
-                icon: Icons.person,
-                label: themeProvider.getText('profile'),
-                value: user.employeeName,
+        child: Stack(
+          children: [
+            if (user != null)
+              SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildProfileHeader(user),
+                    const SizedBox(height: 20),
+                    _buildSectionTitle(themeProvider.getText('personal_info')),
+                    _buildInfoCard(
+                      context,
+                      icon: Icons.person,
+                      label: themeProvider.getText('profile'),
+                      value: user.employeeName,
+                    ),
+                    _buildInfoCard(
+                      context,
+                      icon: Icons.email,
+                      label: themeProvider.getText('email'),
+                      value: user.email,
+                    ),
+                    _buildInfoCard(
+                      context,
+                      icon: Icons.location_on,
+                      label: themeProvider.getText('address'),
+                      value: user.address,
+                    ),
+                    const SizedBox(height: 20),
+                    _buildSectionTitle(themeProvider.getText('work_info')),
+                    _buildInfoCard(
+                      context,
+                      icon: Icons.business,
+                      label: themeProvider.getText('department'),
+                      value: user.departmentName,
+                    ),
+                    _buildInfoCard(
+                      context,
+                      icon: Icons.info,
+                      label: themeProvider.getText('status'),
+                      value: user.status.toUpperCase(),
+                    ),
+                    _buildInfoCard(
+                      context,
+                      icon: Icons.admin_panel_settings,
+                      label: themeProvider.getText('role'),
+                      value: user.role,
+                    ),
+                    const SizedBox(height: 20),
+                    _buildSectionTitle(themeProvider.getText('attendance_record')),
+                    _buildInfoCard(
+                      context,
+                      icon: Icons.login,
+                      label: themeProvider.getText('last_entry'),
+                      value: user.lastCheckIn,
+                    ),
+                    _buildInfoCard(
+                      context,
+                      icon: Icons.logout,
+                      label: themeProvider.getText('last_exit'),
+                      value: user.lastCheckOut,
+                    ),
+                    const SizedBox(height: 20),
+                  ],
+                ),
               ),
-              _buildInfoCard(
-                context,
-                icon: Icons.email,
-                label: themeProvider.getText('email'),
-                value: user.email,
+            if (_isLoading)
+              Container(
+                color: Theme.of(context).scaffoldBackgroundColor.withOpacity(0.7),
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
               ),
-              _buildInfoCard(
-                context,
-                icon: Icons.location_on,
-                label: themeProvider.getText('address'),
-                value: user.address,
-              ),
-              const SizedBox(height: 20),
-              _buildSectionTitle(themeProvider.getText('work_info')),
-              _buildInfoCard(
-                context,
-                icon: Icons.business,
-                label: themeProvider.getText('department'),
-                value: user.departmentName,
-              ),
-              _buildInfoCard(
-                context,
-                icon: Icons.info,
-                label: themeProvider.getText('status'),
-                value: user.status.toUpperCase(),
-              ),
-              _buildInfoCard(
-                context,
-                icon: Icons.admin_panel_settings,
-                label: themeProvider.getText('role'),
-                value: user.role,
-              ),
-              const SizedBox(height: 20),
-              _buildSectionTitle(themeProvider.getText('attendance_record')),
-              _buildInfoCard(
-                context,
-                icon: Icons.login,
-                label: themeProvider.getText('last_entry'),
-                value: user.lastCheckIn,
-              ),
-              _buildInfoCard(
-                context,
-                icon: Icons.logout,
-                label: themeProvider.getText('last_exit'),
-                value: user.lastCheckOut,
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
+          ],
         ),
       ),
     );
@@ -309,7 +345,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final themeProvider = Provider.of<ThemeProvider>(context);
 
     // Si es el estado, mostrar un indicador visual
-    if (label == themeProvider.getText('Estado')) {
+    if (label == themeProvider.getText('status')) {
       return Card(
         color: Theme.of(context).cardColor,
         shape: RoundedRectangleBorder(
@@ -325,17 +361,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   IlluminatedIcon(
                     icon: icon,
                     size: 24,
-                    lightModeColor:
-                        Theme.of(context).textTheme.bodyMedium?.color,
+                    lightModeColor: Theme.of(context).textTheme.bodyMedium?.color,
                   ),
                   const SizedBox(width: 20),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
-                    child: Text(
-                      label,
-                      style: TextStyle(
-                        color: Theme.of(context).textTheme.bodyMedium?.color,
-                      ),
+                  Text(
+                    label,
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.bodyMedium?.color,
                     ),
                   ),
                 ],
@@ -346,44 +378,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color:
-                      value.toLowerCase() == 'activo'
-                          ? Colors.green.withValues(
-                            alpha: 51,
-                            red: 0,
-                            green: 255,
-                            blue: 0,
-                          )
-                          : Colors.red.withValues(
-                            alpha: 51,
-                            red: 255,
-                            green: 0,
-                            blue: 0,
-                          ),
+                  color: value.toLowerCase() == 'activo'
+                      ? Colors.green.withOpacity(0.2)
+                      : Colors.red.withOpacity(0.2),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Container(
-                      width: 8,
-                      height: 8,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color:
-                            value.toLowerCase() == 'activo'
+                    AnimatedBuilder(
+                      animation: _pulseAnimation,
+                      builder: (context, child) {
+                        return Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: value.toLowerCase() == 'activo'
                                 ? Colors.green
                                 : Colors.red,
-                      ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: (value.toLowerCase() == 'activo'
+                                    ? Colors.green
+                                    : Colors.red)
+                                    .withOpacity(0.6),
+                                blurRadius: _pulseAnimation.value * 4,
+                                spreadRadius: _pulseAnimation.value * 2,
+                              ),
+                            ],
+                          ),
+                        );
+                      },
                     ),
                     const SizedBox(width: 8),
                     Text(
                       value,
                       style: TextStyle(
-                        color:
-                            value.toLowerCase() == 'activo'
-                                ? Colors.green
-                                : Colors.red,
+                        color: value.toLowerCase() == 'activo'
+                            ? Colors.green
+                            : Colors.red,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
